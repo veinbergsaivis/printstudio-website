@@ -1,0 +1,130 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Gluds ritinājums visai lapai */
+html { scroll-behavior: smooth; }
+
+/* ===== Dinamisks navbar augstums + droša atstarpe hero ===== */
+:root {
+  /* Rezerves vērtība – reālo augstumu iestata Navbar.tsx ar useLayoutEffect */
+  --nav-h: 72px;
+}
+.safe-top {
+  padding-top: calc(var(--nav-h) + env(safe-area-inset-top, 0px));
+}
+
+/* ===== Navigācijas joslas ielāps – ritina tikai horizontāli, slēpj scrollbar ===== */
+.nav-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -ms-overflow-style: none;  /* IE/Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+.nav-scroll::-webkit-scrollbar {
+  display: none;             /* Chrome/Safari */
+}
+
+@layer components {
+  /* ================================================
+     BACK TO TOP — Brand akcentēta, liela, netraucējoša
+     ================================================ */
+
+  .backtop {
+    @apply fixed right-4 md:right-6 lg:right-8 z-[60]
+           rounded-full select-none
+           shadow-xl hover:shadow-2xl
+           ring-1 ring-black/5
+           transition-all duration-300 ease-out
+           p-0;
+    width: 3.5rem; /* 56px */
+    height: 3.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .backtop { width: 4rem; height: 4rem; }
+  }
+
+  .backtop {
+    background-image: linear-gradient(
+      135deg,
+      hsl(var(--primary)) 0%,
+      color-mix(in oklab, hsl(var(--primary)) 85%, white) 100%
+    );
+    color: white;
+  }
+
+  .backtop:hover { filter: brightness(1.03); transform: translateY(-1px); }
+  .backtop:active { transform: translateY(0); filter: brightness(0.98); }
+
+  .backtop__icon { @apply h-6 w-6 md:h-7 md:w-7 mx-auto my-auto; }
+
+  .backtop--hide { @apply opacity-0 translate-y-3 pointer-events-none; }
+  .backtop--show { @apply opacity-100 translate-y-0 pointer-events-auto; }
+}
+
+@layer utilities {
+  /* Radial shine slānis hero fonam */
+  .bg-hero-shine {
+    background:
+      radial-gradient(1200px 700px at 12% 8%, rgba(255,120,120,0.42) 0%, rgba(255,120,120,0.12) 28%, rgba(255,120,120,0) 55%),
+      radial-gradient(900px 520px at 55% 20%, rgba(255,255,255,0.32) 0%, rgba(255,255,255,0) 60%),
+      radial-gradient(1600px 900px at 50% 100%, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.06) 35%, rgba(0,0,0,0) 62%);
+  }
+
+  /* Apakšas izšķīdināšana, lai nebūtu cietas līnijas starp sekcijām */
+  .hero-bottom-fade {
+    -webkit-mask-image: linear-gradient(to bottom,
+      rgba(0,0,0,1) 0%,
+      rgba(0,0,0,1) calc(100% - 110px),
+      rgba(0,0,0,0) 100%);
+            mask-image: linear-gradient(to bottom,
+      rgba(0,0,0,1) 0%,
+      rgba(0,0,0,1) calc(100% - 110px),
+      rgba(0,0,0,0) 100%);
+  }
+}
+
+@layer components {
+  .carousel-btn {
+    @apply grid place-items-center rounded-full select-none
+           transition-transform duration-300 ease-out
+           shadow-md hover:shadow-lg;
+    width: 2.75rem;
+    height: 2.75rem;
+    background-color: #fff4f4;
+    border: 1.5px solid #ff6b6b;
+    color: #ff4b4b;
+    transform-origin: center;
+  }
+
+  @media (min-width: 768px) {
+    .carousel-btn { width: 3rem; height: 3rem; }
+  }
+
+  .carousel-btn:hover {
+    transform: scale(1.08); /* tikai palielinās — nekādas pārvietošanās */
+  }
+
+  .carousel-btn:active {
+    transform: scale(1); /* atgriežas normālā izmērā */
+  }
+
+  .carousel-icon {
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+}
+
+@layer utilities {
+  .hero-bg {
+    /* Lineārais bāzes gradients */
+    background:
+      linear-gradient(180deg, #fceaea 0%, #ffffff 60%),
+      /* Tavi radial “shine” slāņi */
+      radial-gradient(1200px 700px at 12% 8%, rgba(255,120,120,0.42) 0%, rgba(255,120,120,0.12) 28%, rgba(255,120,120,0) 55%),
+      radial-gradient(900px 520px at 55% 20%, rgba(255,255,255,0.32) 0%, rgba(255,255,255,0) 60%),
+      radial-gradient(1600px 900px at 50% 100%, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.06) 35%, rgba(0,0,0,0) 62%);
+    background-blend-mode: normal;
+  }
+}

@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================
+   Global styles
+   ========================= */
+@layer base {
+  html { scroll-behavior: smooth; }
+
+  body { @apply font-sans bg-background text-text-base antialiased; }
+
+  h1, h2, h3, h4, h5, h6 { @apply font-bold text-text-base; }
+
+  a { @apply text-text-link hover:underline; }
+
+  p { @apply text-base text-text-base; }
+}
+
+/* =========================
+   Utilities extensions
+   ========================= */
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+
+  .animation-delay-0    { animation-delay: 0ms; }
+  .animation-delay-2000 { animation-delay: 2000ms; }
+  .animation-delay-4000 { animation-delay: 4000ms; }
+
+  .mask-fade-right { mask-image: linear-gradient(to right, black 78%, transparent); }
+  .mask-fade-x     { mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); }
+
+  /* Dinamisks padding-top zem fixed Navbar (fallback 88px) */
+  .pt-nav { padding-top: var(--nav-h, 88px); }
+@layer utilities { .pt-nav { padding-top: var(--nav-h, 88px); } }
+}
