@@ -6,7 +6,7 @@ import en from './locales/en'
 import lv from './locales/lv'
 
 i18n
-  .use(LanguageDetector) // Vari atstāt LanguageDetector, bet tas tagad vienmēr izvēlēsies LV, ja tā ir vienīgā pieejamā
+  .use(LanguageDetector)
   .use(initReactI18next)
   .init({
     resources: {
@@ -17,14 +17,13 @@ i18n
         translation: lv,
       },
     },
-    // lng: 'lv', // OPCIONĀLI: Vari pievienot šo, lai nodrošinātu, ka LV ir noklusējuma, pat ja detektors mēģina atrast citu
-    fallbackLng: 'lv', // <--- UZSTĀDA REZERVES VALODU UZ LV
+    lng: 'lv', // Noklusējuma valoda: Latviešu
+    fallbackLng: 'lv',
     interpolation: {
       escapeValue: false,
     },
-    // OPCIONĀLI: Iestati atļautās valodas, ja izmanto LanguageDetector
     supportedLngs: ['lv', 'en'],
-    nonExplicitSupportedLngs: true, // Atļauj detektoram mēģināt atrast valodas, kas nav sarakstā, bet tās netiks ielādētas
+    nonExplicitSupportedLngs: true,
   })
 
 export default i18n
