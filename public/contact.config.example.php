@@ -5,9 +5,9 @@ return [
   'from' => 'no-reply@printstudio.lv',
   'smtp' => [
     'enabled' => false,
-    'host' => 'smtp.yourdomain.lv',
+    'host' => 'smtp.printstudio.lv',
     'port' => 587,
-    'user' => 'no-reply@yourdomain.lv',
+    'user' => 'no-reply@printstudio.lv',
     'pass' => 'CHANGE_ME',
     'secure' => 'tls',
   ],

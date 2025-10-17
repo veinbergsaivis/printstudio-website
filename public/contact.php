@@ -31,6 +31,36 @@ $name = trim($data['name'] ?? '');
 $email = trim($data['email'] ?? '');
 $message = trim($data['message'] ?? '');
 $honeypot = trim($data['company'] ?? ''); // hidden field to catch bots
+$recaptchaToken = trim($data['recaptchaToken'] ?? '');
+
+// reCAPTCHA v3 pārbaude
+$recaptchaSecret = '6LcA2OOrAAAAAktrGXf0J-Ko3zg3pt9DXfRsnO8F';
+if ($recaptchaToken === '') {
+  http_response_code(400);
+  echo json_encode(['ok' => false, 'error' => 'Nav reCAPTCHA tokena']);
+  exit;
+}
+$verify = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($recaptchaSecret) . '&response=' . urlencode($recaptchaToken));
+$captchaSuccess = json_decode($verify, true);
+if (!$captchaSuccess['success'] || $captchaSuccess['score'] < 0.5) {
+  http_response_code(400);
+  echo json_encode(['ok' => false, 'error' => 'reCAPTCHA pārbaude neizdevās']);
+  exit;
+}
+
+// Faila apstrāde
+$file = null;
+$fileError = null;
+if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
+  $file = $_FILES['file'];
+  // Faila validācija (max 10MB, atļautie tipi)
+  $allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+  if ($file['size'] > 10 * 1024 * 1024) {
+    $fileError = 'Fails ir pārāk liels (max 10MB)';
+  } elseif (!in_array($file['type'], $allowedTypes)) {
+    $fileError = 'Faila tips nav atļauts';
+  }
+}
 
 if ($honeypot !== '') {
   http_response_code(200);
@@ -40,13 +70,19 @@ if ($honeypot !== '') {
 
 if ($name === '' || $email === '' || $message === '') {
   http_response_code(400);
-  echo json_encode(['ok' => false, 'error' => 'Missing required fields']);
+  echo json_encode(['ok' => false, 'error' => 'Trūkst obligātu lauku']);
   exit;
 }
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
   http_response_code(400);
-  echo json_encode(['ok' => false, 'error' => 'Invalid email']);
+  echo json_encode(['ok' => false, 'error' => 'Nederīgs e-pasts']);
+  exit;
+}
+
+if ($fileError) {
+  http_response_code(400);
+  echo json_encode(['ok' => false, 'error' => $fileError]);
   exit;
 }
 
@@ -58,9 +94,9 @@ $cfg = [
   // SMTP (optional): set on server for better deliverability
   'smtp' => [
     'enabled' => false,
-    'host' => 'smtp.yourdomain.lv',
+    'host' => 'smtp.printstudio.lv',
     'port' => 587,
-    'user' => 'no-reply@yourdomain.lv',
+    'user' => 'no-reply@printstudio.lv',
     'pass' => 'CHANGE_ME',
     'secure' => 'tls', // tls or ssl
   ],
@@ -77,6 +113,37 @@ if (file_exists($configPath)) {
 
 $subject = 'New contact form message from ' . $name;
 $body = "Name: {$name}\nEmail: {$email}\n\nMessage:\n{$message}\n";
+
+// Faila pielikums e-pastam (PHPMailer)
+if ($cfg['smtp']['enabled'] && $file) {
+  // PHPMailer
+  $vendorPath = $cfg['repo_root'] . '/vendor/autoload.php';
+  if (file_exists($vendorPath)) {
+    require_once $vendorPath;
+    $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+    try {
+      $mail->isSMTP();
+      $mail->Host = $cfg['smtp']['host'];
+      $mail->SMTPAuth = true;
+      $mail->Username = $cfg['smtp']['user'];
+      $mail->Password = $cfg['smtp']['pass'];
+      $mail->SMTPSecure = $cfg['smtp']['secure'];
+      $mail->Port = $cfg['smtp']['port'];
+      $mail->setFrom($cfg['from'], 'PrintStudio');
+      $mail->addAddress($cfg['to']);
+      $mail->Subject = $subject;
+      $mail->Body = $body;
+      $mail->addAttachment($file['tmp_name'], $file['name']);
+      $mail->send();
+      echo json_encode(['ok' => true]);
+      exit;
+    } catch (Exception $e) {
+      http_response_code(500);
+      echo json_encode(['ok' => false, 'error' => 'E-pasta sūtīšana neizdevās: ' . $mail->ErrorInfo]);
+      exit;
+    }
+  }
+}
 
 // Try PHPMailer if available and enabled
 $autoload1 = $cfg['repo_root'] . '/vendor/autoload.php';
