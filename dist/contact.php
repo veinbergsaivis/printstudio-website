@@ -1,6 +1,7 @@
 <?php
-// Simple contact form handler for cPanel (PHP)
-// Place in public_html as contact.php (we commit it under /public so it lands in dist/)
+// Contact form handler for cPanel (PHP)
+// - Tries PHPMailer via Composer if available (SMTP support)
+// - Falls back to PHP mail() if PHPMailer not installed
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
@@ -49,12 +50,77 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
   exit;
 }
 
-$to = 'info@printstudio.lv'; // TODO: set your cPanel email here
+// Load optional config (DO NOT commit secrets). On server, copy and edit contact.config.php.
+$configPath = __DIR__ . '/contact.config.php';
+$cfg = [
+  'to' => 'info@printstudio.lv',
+  'from' => 'no-reply@printstudio.lv',
+  // SMTP (optional): set on server for better deliverability
+  'smtp' => [
+    'enabled' => false,
+    'host' => 'smtp.yourdomain.lv',
+    'port' => 587,
+    'user' => 'no-reply@yourdomain.lv',
+    'pass' => 'CHANGE_ME',
+    'secure' => 'tls', // tls or ssl
+  ],
+  // Absolute repo path for Composer vendor (cPanel repo path)
+  'repo_root' => '/home4/printstu/repositories/printstudio-website',
+];
+if (file_exists($configPath)) {
+  // phpcs:ignore
+  $userCfg = include $configPath; // should return array
+  if (is_array($userCfg)) {
+    $cfg = array_replace_recursive($cfg, $userCfg);
+  }
+}
+
 $subject = 'New contact form message from ' . $name;
 $body = "Name: {$name}\nEmail: {$email}\n\nMessage:\n{$message}\n";
-$headers = "From: no-reply@printstudio.lv\r\nReply-To: {$email}\r\nX-Mailer: PHP/" . phpversion();
 
-$sent = @mail($to, $subject, $body, $headers);
+// Try PHPMailer if available and enabled
+$autoload1 = $cfg['repo_root'] . '/vendor/autoload.php';
+$autoload2 = __DIR__ . '/../vendor/autoload.php'; // in case vendor is copied near public_html
+
+$phpmailerAvailable = file_exists($autoload1) || file_exists($autoload2);
+
+if ($phpmailerAvailable && (!empty($cfg['smtp']['enabled']))) {
+  // Load Composer autoload
+  if (file_exists($autoload1)) {
+    require_once $autoload1;
+  } elseif (file_exists($autoload2)) {
+    require_once $autoload2;
+  }
+  try {
+    $mailer = new PHPMailer\PHPMailer\PHPMailer(true);
+    if (!empty($cfg['smtp']['enabled'])) {
+      $mailer->isSMTP();
+      $mailer->Host = $cfg['smtp']['host'];
+      $mailer->SMTPAuth = true;
+      $mailer->Username = $cfg['smtp']['user'];
+      $mailer->Password = $cfg['smtp']['pass'];
+      $mailer->SMTPSecure = $cfg['smtp']['secure'];
+      $mailer->Port = (int)$cfg['smtp']['port'];
+    }
+
+    $mailer->CharSet = 'UTF-8';
+    $mailer->setFrom($cfg['from'], 'Website');
+    $mailer->addAddress($cfg['to']);
+    $mailer->addReplyTo($email, $name);
+    $mailer->Subject = $subject;
+    $mailer->Body = $body;
+
+    $mailer->send();
+    echo json_encode(['ok' => true]);
+    exit;
+  } catch (Throwable $e) {
+    // fall through to mail() as a backup
+  }
+}
+
+// Fallback: PHP mail()
+$headers = "From: {$cfg['from']}\r\nReply-To: {$email}\r\nX-Mailer: PHP/" . phpversion();
+$sent = @mail($cfg['to'], $subject, $body, $headers);
 
 if ($sent) {
   echo json_encode(['ok' => true]);

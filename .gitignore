@@ -37,6 +37,9 @@ Thumbs.db
 .env.*
 !.env.example
 
+# Server-side contact form config (do not commit secrets)
+public/contact.config.php
+
 # TypeScript build info
 *.tsbuildinfo
 
