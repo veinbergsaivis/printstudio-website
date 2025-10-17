@@ -5,11 +5,7 @@ import lineClamp from '@tailwindcss/line-clamp'
 import textShadow from 'tailwindcss-textshadow'
 
 export default {
-  darkMode: 'class',
-  content: [
-    './index.html',
-    './src/**/*.{js,ts,jsx,tsx}',
-  ],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     container: {
       center: true,
@@ -35,24 +31,15 @@ export default {
         sans: ['Montserrat', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       colors: {
-        // Tava palete
-        'da-white': '#FFFFFF',
-        'da-offwhite': '#F8F9FA',
-        'da-black': '#1A1A1A',
-        'da-red': '#D92121',
-        'da-medium-gray': '#737373',
-        'da-light-gray': '#C5CED6',
-
-        'background': '#F8F9FA',
-        'surface': '#FFFFFF',
-        'primary': '#D92121',
-        'secondary': '#737373',
-        'accent': '#C5CED6',
-
-        'text-base': '#1A1A1A',
-        'text-muted': '#737373',
-        'text-link': '#D92121',
-
+        // Gaišais režīms (default)
+        background: '#F8F9FA',
+        surface: '#FFFFFF',
+        primary: '#D92121',
+        secondary: '#737373',
+        accent: '#C5CED6',
+        'text-base': '#111111',
+        'text-muted': '#444444',
+        'text-link': '#0A36B1',
         'border-color': '#C5CED6',
       },
       boxShadow: {
@@ -69,13 +56,13 @@ export default {
       keyframes: {
         // Aizpildīti keyframes
         blob: {
-          '0%':   { transform: 'translate(0px, 0px) scale(1)' },
-          '33%':  { transform: 'translate(20px, -30px) scale(1.05)' },
-          '66%':  { transform: 'translate(-15px, 15px) scale(0.97)' },
+          '0%': { transform: 'translate(0px, 0px) scale(1)' },
+          '33%': { transform: 'translate(20px, -30px) scale(1.05)' },
+          '66%': { transform: 'translate(-15px, 15px) scale(0.97)' },
           '100%': { transform: 'translate(0px, 0px) scale(1)' },
         },
         fadeIn: {
-          '0%':   { opacity: '0', transform: 'translateY(8px)' },
+          '0%': { opacity: '0', transform: 'translateY(8px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
       },
@@ -91,9 +78,5 @@ export default {
       },
     },
   },
-  plugins: [
-    textShadow,
-    typography,
-    lineClamp,
-  ],
+  plugins: [textShadow, typography],
 }

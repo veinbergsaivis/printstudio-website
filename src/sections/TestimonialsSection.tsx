@@ -1,8 +1,7 @@
 // src/sections/TestimonialsSection.tsx
-import React from 'react';
-import { useTranslation } from 'react-i18next';
-import TestimonialCard, { Testimonial } from '../components/TestimonialCard'; // Pārliecinies par pareizu ceļu
-import { cn } from '../lib/utils'; // Pārliecinies par pareizu ceļu
+import React from 'react'
+import { useTranslation } from 'react-i18next'
+import TestimonialCard, { Testimonial } from '../components/TestimonialCard' // Pārliecinies par pareizu ceļu
 
 // Pagaidu dati - aizstāj ar reāliem datiem un tulkojumu atslēgām
 const testimonialsData: Testimonial[] = [
@@ -16,7 +15,7 @@ const testimonialsData: Testimonial[] = [
   {
     id: 'testimonial2',
     clientNameKey: 'testimonials.client2.name',
-	clientCompanyKey: 'testimonials.client2.company',
+    clientCompanyKey: 'testimonials.client2.company',
     testimonialTextKey: 'testimonials.client2.text',
     rating: 5,
   },
@@ -29,31 +28,48 @@ const testimonialsData: Testimonial[] = [
     rating: 5,
   },
   // Pievieno vairāk atsauksmju pēc nepieciešamības
-];
+]
 
 const TestimonialsSection: React.FC = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   return (
-    <section id="testimonials" className="py-16 md:py-24 bg-accent/20"> {/* Fons nedaudz atšķirīgs no bg-background */}
-      <div className="container mx-auto px-4 md:px-8">
-        <div className="text-center mb-12 md:mb-16">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-text-base mb-4">
+    <section id='testimonials' className='relative py-16 md:py-24 bg-accent/10'>
+      {/* White fade overlay augšā - pāreja no bg-surface */}
+      <div
+        className='absolute inset-x-0 top-0 pointer-events-none z-[1]'
+        style={{
+          height: '150px',
+          background:
+            'linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)',
+        }}
+      />
+
+      {/* White fade overlay apakšā - pāreja uz bg-surface */}
+      <div
+        className='absolute inset-x-0 bottom-0 pointer-events-none z-[1]'
+        style={{
+          height: '150px',
+          background: 'linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)',
+        }}
+      />
+
+      <div className='container mx-auto px-4 md:px-8 relative z-[2]'>
+        <div className='text-center mb-12 md:mb-16'>
+          <h2 className='text-3xl md:text-4xl lg:text-5xl font-bold text-text-base mb-4'>
             {t('testimonials.title', 'Ko par mums saka klienti')}
           </h2>
-          <div
-            className="hidden"
-          ></div>
+          <div className='hidden'></div>
         </div>
 
         {testimonialsData.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {testimonialsData.map((testimonial) => (
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
+            {testimonialsData.map(testimonial => (
               <TestimonialCard key={testimonial.id} testimonial={testimonial} />
             ))}
           </div>
         ) : (
-          <p className="text-center text-text-muted">
+          <p className='text-center text-text-muted'>
             {t('testimonials.noData', 'Pagaidām nav pievienotas atsauksmes.')}
           </p>
         )}
@@ -66,7 +82,7 @@ const TestimonialsSection: React.FC = () => {
         </div> */}
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default TestimonialsSection;
+export default TestimonialsSection

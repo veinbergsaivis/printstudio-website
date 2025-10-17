@@ -1,99 +1,104 @@
-import React, { useState } from 'react';
-import Button from './Button'; // Importējam pielāgoto pogu
-import { cn } from '../lib/utils'; // Importējam cn, ja nepieciešams
+import React from 'react'
+import Button from './Button' // Importējam pielāgoto pogu
+import { cn } from '../lib/utils' // Importējam cn, ja nepieciešams
+import { useForm } from 'react-hook-form'
+
+type FormValues = {
+  name: string
+  email: string
+  message: string
+}
 
 const ContactForm: React.FC = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: '',
-  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm<FormValues>()
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Šeit būtu reāla formas nosūtīšanas loģika (piem., uz API)
-    console.log('Form submitted:', formData);
-    alert('Thanks for your message! We will get back to you soon.'); // TODO: Aizstāt alert ar labāku paziņojumu
-    setFormData({ name: '', email: '', message: '' }); // Notīrām formu
-  };
+  const onSubmit = async (data: FormValues) => {
+    try {
+      // Šeit var izsaukt API
+      console.log('Form submitted:', data)
+      alert('Thanks for your message! We will get back to you soon.')
+      reset()
+    } catch (err) {
+      console.error(err)
+      alert('Sorry, something went wrong. Please try again later.')
+    }
+  }
 
   // Bāzes stili ievades laukiem, lai neatkārtotos
   const inputBaseStyles = cn(
-    "w-full px-4 py-3 rounded-lg text-sm md:text-base", // Pievienots text-sm md:text-base responsīvam fonta izmēram
+    'w-full px-4 py-3 rounded-lg text-sm md:text-base', // Pievienots text-sm md:text-base responsīvam fonta izmēram
     // === KRĀSAS NOMAINĪTAS ===
-    "bg-surface border border-border-color text-text-base placeholder-text-muted", // Fons, apmale, teksts, placeholder
-    "focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary", // Fokusa stili (izmanto primāro krāsu)
-    "transition-all duration-300"
-  );
+    'bg-surface border border-border-color text-text-base placeholder-text-muted', // Fons, apmale, teksts, placeholder
+    'focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary', // Fokusa stili (izmanto primāro krāsu)
+    'transition-all duration-300'
+  )
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5 md:space-y-6"> {/* Nedaudz pielāgota atstarpe */}
+    <form onSubmit={handleSubmit(onSubmit)} className='space-y-5 md:space-y-6'>
+      {' '}
+      {/* Nedaudz pielāgota atstarpe */}
       <div>
-        {/* === KRĀSAS NOMAINĪTAS === */}
-        <label htmlFor="name" className="block text-sm font-medium mb-1.5 text-text-base"> {/* Samazināta atstarpe un fonta izmērs */}
+        <label htmlFor='name' className='block text-sm font-medium mb-1.5 text-text-base'>
           Name
         </label>
         <input
-          type="text"
-          id="name"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-          className={inputBaseStyles} // Izmantojam bāzes stilus
-          placeholder="Jūsu vārds vai uzņēmuma nosaukums"
-          autoComplete="name" // Pievienots autocomplete atribūts
+          type='text'
+          id='name'
+          {...register('name', { required: 'Required' })}
+          className={inputBaseStyles}
+          placeholder='Jūsu vārds vai uzņēmuma nosaukums'
+          autoComplete='name'
         />
+        {errors.name && <p className='mt-1 text-sm text-da-red'>{String(errors.name.message)}</p>}
       </div>
-
       <div>
-        {/* === KRĀSAS NOMAINĪTAS === */}
-        <label htmlFor="email" className="block text-sm font-medium mb-1.5 text-text-base"> {/* Samazināta atstarpe un fonta izmērs */}
+        <label htmlFor='email' className='block text-sm font-medium mb-1.5 text-text-base'>
           Email
         </label>
         <input
-          type="email"
-          id="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-          className={inputBaseStyles} // Izmantojam bāzes stilus
-          placeholder="Jūsu e-pasts"
-          autoComplete="email" // Pievienots autocomplete atribūts
+          type='email'
+          id='email'
+          {...register('email', {
+            required: 'Required',
+            pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Invalid email' },
+          })}
+          className={inputBaseStyles}
+          placeholder='Jūsu e-pasts'
+          autoComplete='email'
         />
+        {errors.email && <p className='mt-1 text-sm text-da-red'>{String(errors.email.message)}</p>}
       </div>
-
       <div>
-        {/* === KRĀSAS NOMAINĪTAS === */}
-        <label htmlFor="message" className="block text-sm font-medium mb-1.5 text-text-base"> {/* Samazināta atstarpe un fonta izmērs */}
+        <label htmlFor='message' className='block text-sm font-medium mb-1.5 text-text-base'>
           Message
         </label>
         <textarea
-          id="message"
-          name="message"
-          value={formData.message}
-          onChange={handleChange}
-          required
+          id='message'
           rows={4}
-          className={inputBaseStyles} // Izmantojam bāzes stilus
-          placeholder="Jūsu ziņojums"
-          autoComplete="off" // Izslēdzam autocomplete ziņojumam
+          {...register('message', {
+            required: 'Required',
+            minLength: { value: 10, message: 'Message is too short' },
+          })}
+          className={inputBaseStyles}
+          placeholder='Jūsu ziņojums'
+          autoComplete='off'
         />
+        {errors.message && (
+          <p className='mt-1 text-sm text-da-red'>{String(errors.message.message)}</p>
+        )}
       </div>
-
       {/* Izmantojam pielāgoto Button komponentu */}
       {/* Pārliecinies, ka Button komponentā 'primary' variants ir tas, ko vēlies šeit (piem., electric-blue) */}
-      <Button type="submit" variant="primary" size="md" className="w-full">
-        Send Message
+      <Button type='submit' variant='primary' size='md' className='w-full' disabled={isSubmitting}>
+        {isSubmitting ? 'Sending...' : 'Send Message'}
       </Button>
     </form>
-  );
-};
+  )
+}
 
-export default ContactForm;
+export default ContactForm

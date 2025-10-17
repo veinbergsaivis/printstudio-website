@@ -3,3 +3,4 @@
 
 npx --no -- pretty-quick --staged
 npx --no -- lint-staged
+npx --no -- pretty-quick --staged && npx --no -- lint-staged

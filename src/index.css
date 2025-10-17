@@ -3,7 +3,9 @@
 @tailwind utilities;
 
 /* Gluds ritinājums visai lapai */
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+}
 
 /* ===== Dinamisks navbar augstums + droša atstarpe hero ===== */
 :root {
@@ -18,11 +20,11 @@ html { scroll-behavior: smooth; }
 .nav-scroll {
   overflow-x: auto;
   overflow-y: hidden;
-  -ms-overflow-style: none;  /* IE/Edge */
-  scrollbar-width: none;     /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+  scrollbar-width: none; /* Firefox */
 }
 .nav-scroll::-webkit-scrollbar {
-  display: none;             /* Chrome/Safari */
+  display: none; /* Chrome/Safari */
 }
 
 @layer components {
@@ -42,7 +44,10 @@ html { scroll-behavior: smooth; }
   }
 
   @media (min-width: 768px) {
-    .backtop { width: 4rem; height: 4rem; }
+    .backtop {
+      width: 4rem;
+      height: 4rem;
+    }
   }
 
   .backtop {
@@ -54,34 +59,75 @@ html { scroll-behavior: smooth; }
     color: white;
   }
 
-  .backtop:hover { filter: brightness(1.03); transform: translateY(-1px); }
-  .backtop:active { transform: translateY(0); filter: brightness(0.98); }
+  .backtop:hover {
+    filter: brightness(1.03);
+    transform: translateY(-1px);
+  }
+  .backtop:active {
+    transform: translateY(0);
+    filter: brightness(0.98);
+  }
 
-  .backtop__icon { @apply h-6 w-6 md:h-7 md:w-7 mx-auto my-auto; }
+  .backtop__icon {
+    @apply h-6 w-6 md:h-7 md:w-7 mx-auto my-auto;
+  }
 
-  .backtop--hide { @apply opacity-0 translate-y-3 pointer-events-none; }
-  .backtop--show { @apply opacity-100 translate-y-0 pointer-events-auto; }
+  .backtop--hide {
+    @apply opacity-0 translate-y-3 pointer-events-none;
+  }
+  .backtop--show {
+    @apply opacity-100 translate-y-0 pointer-events-auto;
+  }
 }
 
 @layer utilities {
   /* Radial shine slānis hero fonam */
   .bg-hero-shine {
     background:
-      radial-gradient(1200px 700px at 12% 8%, rgba(255,120,120,0.42) 0%, rgba(255,120,120,0.12) 28%, rgba(255,120,120,0) 55%),
-      radial-gradient(900px 520px at 55% 20%, rgba(255,255,255,0.32) 0%, rgba(255,255,255,0) 60%),
-      radial-gradient(1600px 900px at 50% 100%, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.06) 35%, rgba(0,0,0,0) 62%);
+      radial-gradient(
+        1200px 700px at 12% 8%,
+        rgba(255, 120, 120, 0.42) 0%,
+        rgba(255, 120, 120, 0.12) 28%,
+        rgba(255, 120, 120, 0) 55%
+      ),
+      radial-gradient(
+        900px 520px at 55% 20%,
+        rgba(255, 255, 255, 0.32) 0%,
+        rgba(255, 255, 255, 0) 60%
+      ),
+      radial-gradient(
+        1600px 900px at 50% 100%,
+        rgba(0, 0, 0, 0.1) 0%,
+        rgba(0, 0, 0, 0.06) 35%,
+        rgba(0, 0, 0, 0) 62%
+      );
   }
 
   /* Apakšas izšķīdināšana, lai nebūtu cietas līnijas starp sekcijām */
   .hero-bottom-fade {
-    -webkit-mask-image: linear-gradient(to bottom,
-      rgba(0,0,0,1) 0%,
-      rgba(0,0,0,1) calc(100% - 110px),
-      rgba(0,0,0,0) 100%);
-            mask-image: linear-gradient(to bottom,
-      rgba(0,0,0,1) 0%,
-      rgba(0,0,0,1) calc(100% - 110px),
-      rgba(0,0,0,0) 100%);
+    --hero-fade-solid: 92%;
+    --hero-fade-soft: 98%;
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 1) 0%,
+      rgba(0, 0, 0, 1) var(--hero-fade-solid),
+      rgba(0, 0, 0, 0.2) var(--hero-fade-soft),
+      rgba(0, 0, 0, 0) 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 1) 0%,
+      rgba(0, 0, 0, 1) var(--hero-fade-solid),
+      rgba(0, 0, 0, 0.2) var(--hero-fade-soft),
+      rgba(0, 0, 0, 0) 100%
+    );
+  }
+
+  @media (max-width: 640px) {
+    .hero-bottom-fade {
+      --hero-fade-solid: 94%;
+      --hero-fade-soft: 99%;
+    }
   }
 }
 
@@ -99,7 +145,10 @@ html { scroll-behavior: smooth; }
   }
 
   @media (min-width: 768px) {
-    .carousel-btn { width: 3rem; height: 3rem; }
+    .carousel-btn {
+      width: 3rem;
+      height: 3rem;
+    }
   }
 
   .carousel-btn:hover {
@@ -122,9 +171,23 @@ html { scroll-behavior: smooth; }
     background:
       linear-gradient(180deg, #fceaea 0%, #ffffff 60%),
       /* Tavi radial “shine” slāņi */
-      radial-gradient(1200px 700px at 12% 8%, rgba(255,120,120,0.42) 0%, rgba(255,120,120,0.12) 28%, rgba(255,120,120,0) 55%),
-      radial-gradient(900px 520px at 55% 20%, rgba(255,255,255,0.32) 0%, rgba(255,255,255,0) 60%),
-      radial-gradient(1600px 900px at 50% 100%, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.06) 35%, rgba(0,0,0,0) 62%);
+        radial-gradient(
+          1200px 700px at 12% 8%,
+          rgba(255, 120, 120, 0.42) 0%,
+          rgba(255, 120, 120, 0.12) 28%,
+          rgba(255, 120, 120, 0) 55%
+        ),
+      radial-gradient(
+        900px 520px at 55% 20%,
+        rgba(255, 255, 255, 0.32) 0%,
+        rgba(255, 255, 255, 0) 60%
+      ),
+      radial-gradient(
+        1600px 900px at 50% 100%,
+        rgba(0, 0, 0, 0.1) 0%,
+        rgba(0, 0, 0, 0.06) 35%,
+        rgba(0, 0, 0, 0) 62%
+      );
     background-blend-mode: normal;
   }
 }

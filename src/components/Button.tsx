@@ -1,10 +1,10 @@
-import React from 'react';
-import { cn } from '../lib/utils';
+import React from 'react'
+import { cn } from '../lib/utils'
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  children: React.ReactNode;
-  variant?: 'primary' | 'secondary' | 'outline';
-  size?: 'sm' | 'md' | 'lg';
+  children: React.ReactNode
+  variant?: 'primary' | 'secondary' | 'outline'
+  size?: 'sm' | 'md' | 'lg'
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -22,13 +22,14 @@ const Button: React.FC<ButtonProps> = ({
     inline-flex items-center justify-center relative overflow-hidden
     focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
     focus-visible:ring-offset-background disabled:cursor-not-allowed
-  `;
+  `
 
   const variantStyles = {
     primary: `
-      bg-primary text-white shadow-md hover:shadow-lg hover:brightness-110
+      bg-primary text-white shadow-lg hover:shadow-xl hover:brightness-110
       active:brightness-100 active:scale-[0.98] focus-visible:ring-primary
       disabled:bg-primary/50 disabled:shadow-none disabled:brightness-100
+      shadow-[0_4px_24px_0_rgba(0,0,0,0.10),0_1.5px_6px_0_rgba(217,33,33,0.15)]
     `,
     // Sekundārā poga: Teksts tumšs (text-base) uz vidēji pelēka (secondary) fona
     secondary: `
@@ -42,13 +43,13 @@ const Button: React.FC<ButtonProps> = ({
       focus-visible:ring-secondary
       disabled:border-secondary/40 disabled:text-secondary/40 disabled:bg-transparent
     `,
-  };
+  }
 
   const sizeStyles = {
     sm: 'text-sm py-1.5 px-3',
     md: 'text-base py-2 px-5',
     lg: 'text-lg py-2.5 px-7',
-  };
+  }
 
   return (
     <button
@@ -59,7 +60,9 @@ const Button: React.FC<ButtonProps> = ({
         sizeStyles[size],
         // Vispārējie disabled stili var palikt, bet specifiskie variantos ir prioritāri
         // Ja specifiskie disabled stili variantos ir pietiekami, šo var noņemt vai atstāt kā fallback
-        disabled && !variantStyles[variant].includes('disabled:') && 'opacity-60 pointer-events-none',
+        disabled &&
+          !variantStyles[variant].includes('disabled:') &&
+          'opacity-60 pointer-events-none',
         className
       )}
       onClick={onClick}
@@ -68,7 +71,7 @@ const Button: React.FC<ButtonProps> = ({
     >
       {children}
     </button>
-  );
-};
+  )
+}
 
-export default Button;
+export default Button

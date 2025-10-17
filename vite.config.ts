@@ -8,44 +8,23 @@ const imageOptimizerConfig = {
   includePublic: true,
   logStats: true,
   ansiColors: true,
-  svg: {
-    multipass: true,
-    plugins: [
-      {
-        name: 'preset-default',
-        params: {
-          overrides: {
-            cleanupNumericValues: false,
-            removeViewBox: false,
-          },
-        },
-      },
-    ],
-  },
   png: {
-    // PNG optimization options
     quality: 80,
   },
   jpeg: {
-    // JPEG optimization options
     quality: 80,
   },
   jpg: {
-    // JPG optimization options
     quality: 80,
   },
   webp: {
-    // WebP optimization options
     lossless: true,
   },
-}
+} as const
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    react(),
-    ViteImageOptimizer(imageOptimizerConfig),
-  ],
+  plugins: [react(), ViteImageOptimizer(imageOptimizerConfig)],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -53,5 +32,18 @@ export default defineConfig({
   },
   optimizeDeps: {
     exclude: ['lucide-react'],
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-framer': ['framer-motion'],
+          'vendor-i18n': ['i18next', 'react-i18next', 'i18next-browser-languagedetector'],
+          'vendor-helmet': ['react-helmet-async'],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 600,
   },
 })

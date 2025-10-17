@@ -7,10 +7,16 @@
 
     <!-- SEO -->
     <title>Print Studio — Think Bigger. Print Bolder.</title>
-    <meta name="description" content="Premium printing services designed to elevate your brand with cutting-edge technology and exceptional quality." />
-    <meta name="keywords" content="print studio, apdruka, UV druka, t-krekli, džemperi, tekstils, Liepāja, Latvija" />
+    <meta
+      name="description"
+      content="Premium printing services designed to elevate your brand with cutting-edge technology and exceptional quality."
+    />
+    <meta
+      name="keywords"
+      content="print studio, apdruka, UV druka, t-krekli, džemperi, tekstils, Liepāja, Latvija"
+    />
     <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://www.printstudio.lv/" />
+    <!-- Canonical URL is handled dynamically by SEO component -->
 
     <!-- Theme / PWA -->
     <meta name="theme-color" content="#0a0a0a" />
@@ -22,13 +28,42 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
-    <!-- === FONTS (ORIGINAL) === -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- === PERFORMANCE OPTIMIZATION === -->
+    <!-- Preload critical hero image for faster LCP -->
+    <link
+      rel="preload"
+      as="image"
+      href="/src/assets/hoodie-768.webp"
+      type="image/webp"
+      fetchpriority="high"
+    />
+
+    <!-- === FONTS (OPTIMIZED) === -->
+    <!-- Montserrat font loaded via Vite with font-display: swap for better performance -->
+
+    <!-- Google Tag Manager -->
+    <script>
+      ;(function (w, d, s, l, i) {
+        w[l] = w[l] || []
+        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' })
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != 'dataLayer' ? '&l=' + l : ''
+        j.async = true
+        j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl
+        f.parentNode.insertBefore(j, f)
+      })(window, document, 'script', 'dataLayer', 'GTM-5RSJTX4Z')
+    </script>
+    <!-- End Google Tag Manager -->
+    <!-- Font faces defined in src/styles/fonts.css -->
     <style>
       body {
-        font-family: 'Montserrat', sans-serif;
+        font-family:
+          'Montserrat',
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          sans-serif;
       }
     </style>
 
@@ -36,7 +71,10 @@
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Print Studio" />
     <meta property="og:title" content="Print Studio — Think Bigger. Print Bolder." />
-    <meta property="og:description" content="Premium printing services designed to elevate your brand with cutting-edge technology and exceptional quality." />
+    <meta
+      property="og:description"
+      content="Premium printing services designed to elevate your brand with cutting-edge technology and exceptional quality."
+    />
     <meta property="og:url" content="https://www.printstudio.lv/" />
     <meta property="og:image" content="https://www.printstudio.lv/og/og-image.jpg" />
     <meta property="og:image:width" content="1200" />
@@ -45,63 +83,84 @@
     <!-- === TWITTER CARDS === -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Print Studio — Think Bigger. Print Bolder." />
-    <meta name="twitter:description" content="Premium printing services designed to elevate your brand with cutting-edge technology and exceptional quality." />
+    <meta
+      name="twitter:description"
+      content="Premium printing services designed to elevate your brand with cutting-edge technology and exceptional quality."
+    />
     <meta name="twitter:image" content="https://www.printstudio.lv/og/og-image.jpg" />
 
-    <!-- === GA4 (Google Analytics) === -->
+    <!-- === GA4 (Google Analytics) - Deferred for Performance === -->
     <!-- TODO: nomaini G-XXXXXXXXXX uz savu Measurement ID -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){ dataLayer.push(arguments); }
-      gtag('consent', 'default', {
-        'ad_storage': 'denied',
-        'ad_user_data': 'denied',
-        'ad_personalization': 'denied',
-        'analytics_storage': 'granted'
-      });
-      gtag('js', new Date());
-      gtag('config', 'G-XXXXXXXXXX');
+      // Defer GA loading until after page load
+      window.addEventListener('load', function () {
+        var script = document.createElement('script')
+        script.async = true
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX'
+        document.head.appendChild(script)
+
+        window.dataLayer = window.dataLayer || []
+        function gtag() {
+          dataLayer.push(arguments)
+        }
+        window.gtag = gtag
+        gtag('consent', 'default', {
+          ad_storage: 'denied',
+          ad_user_data: 'denied',
+          ad_personalization: 'denied',
+          analytics_storage: 'granted',
+        })
+        gtag('js', new Date())
+        gtag('config', 'G-XXXXXXXXXX')
+      })
     </script>
 
     <!-- === JSON-LD: ORGANIZATION === -->
     <script type="application/ld+json">
-    {
-      "@context":"https://schema.org",
-      "@type":"Organization",
-      "name":"Print Studio",
-      "url":"https://www.printstudio.lv/",
-      "logo":"https://www.printstudio.lv/logo.png",
-      "sameAs":[
-        "https://www.instagram.com/printstudio",
-        "https://www.facebook.com/printstudio"
-      ],
-      "slogan":"Think Bigger. Print Bolder.",
-      "address":{
-        "@type":"PostalAddress",
-        "addressCountry":"LV",
-        "addressLocality":"Liepāja"
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Print Studio",
+        "url": "https://www.printstudio.lv/",
+        "logo": "https://www.printstudio.lv/logo-black.webp",
+        "sameAs": ["https://www.instagram.com/printstudio", "https://www.facebook.com/printstudio"],
+        "slogan": "Think Bigger. Print Bolder.",
+        "address": {
+          "@type": "PostalAddress",
+          "addressCountry": "LV",
+          "addressLocality": "Liepāja"
+        }
       }
-    }
     </script>
 
     <!-- === JSON-LD: WEBSITE === -->
     <script type="application/ld+json">
-    {
-      "@context":"https://schema.org",
-      "@type":"WebSite",
-      "url":"https://www.printstudio.lv/",
-      "name":"Print Studio",
-      "potentialAction":{
-        "@type":"SearchAction",
-        "target":"https://www.printstudio.lv/search?q={query}",
-        "query-input":"required name=query"
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "url": "https://www.printstudio.lv/",
+        "name": "Print Studio",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://www.printstudio.lv/search?q={query}",
+          "query-input": "required name=query"
+        }
       }
-    }
     </script>
   </head>
 
   <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-5RSJTX4Z"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
+    ></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
     <noscript>Šī vietne vislabāk darbojas ar iespējotu JavaScript.</noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
