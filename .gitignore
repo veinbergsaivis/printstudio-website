@@ -10,8 +10,8 @@ lerna-debug.log*
 # Node modules
 node_modules/
 
-# Build output
-dist/
+# Build output (keep dist for cPanel deployment)
+# dist/
 dist-ssr/
 *.local
 
@@ -36,3 +36,21 @@ Thumbs.db
 .env
 .env.*
 !.env.example
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Test and audit reports (optional - keep if needed for reference)
+# AUDIT_REPORT.md
+# BUILD_TEST_REPORT.md
+# HEADING_AUDIT.md
+# LIGHTHOUSE_ACTION_PLAN.md
+# PHASE1_COMPLETION_REPORT.md
+
+# i18n reports (optional - keep if needed)
+# i18n-sync-report.json
+# i18n-translation-queue.csv
+# i18n-validate-report.json
+
+# Temporary test files
+light test/
