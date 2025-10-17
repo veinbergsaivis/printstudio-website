@@ -248,6 +248,18 @@ export default {
         description: 'Individuāli iepakojuma risinājumi, kas atstāj paliekošu iespaidu.',
         title: 'Iepakojums',
       },
+      'gd-card': {
+        title: 'GD Events vizītkarte',
+        description: 'Augstas kvalitātes vizītkarte ar zelta foliju un QR kodu.',
+      },
+      'ps-card': {
+        title: 'PS vizītkarte',
+        description: 'Print Studio personalizēta vizītkarte ar modernu dizainu.',
+      },
+      'gdb-banner': {
+        title: 'GD Events baneris',
+        description: 'Lielformāta roll-up baneris ar foto un QR kodu.',
+      },
     },
     noResults: 'Šajā kategorijā darbi nav atrasti.',
     title: 'Mūsu Darbi',
@@ -487,21 +499,5 @@ export default {
     warning:
       'Ja maketā tiks konstatētas problēmas (krāsu profils, bleed, izšķirtspēja u.c.), mēs ar jums sazināsimies pirms drukas. Nepilnību labošanas darbi var būt par papildu maksu.',
     cta: 'Jautājumi par failu sagatavi? Rakstiet mums',
-  },
-  gallery: {
-    items: {
-      'gd-card': {
-        title: 'GD Events vizītkarte',
-        description: 'Augstas kvalitātes vizītkarte ar zelta foliju un QR kodu.',
-      },
-      'ps-card': {
-        title: 'PS vizītkarte',
-        description: 'Print Studio personalizēta vizītkarte ar modernu dizainu.',
-      },
-      'gdb-banner': {
-        title: 'GD Events baneris',
-        description: 'Lielformāta roll-up baneris ar foto un QR kodu.',
-      },
-    },
   },
 }
