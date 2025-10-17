@@ -3,6 +3,7 @@ import Button from './Button' // Importējam pielāgoto pogu
 import { cn } from '../lib/utils' // Importējam cn, ja nepieciešams
 import { useForm } from 'react-hook-form'
 import ReCaptchaV3 from './ReCaptchaV3'
+import { useTranslation } from 'react-i18next'
 
 type FormValues = {
   name: string
@@ -14,12 +15,9 @@ type FormValues = {
 }
 
 const ContactForm: React.FC = () => {
+  const { t } = useTranslation()
   const RECAPTCHA_SITE_KEY = '6LcA2OOrAAAAANbWMHQqlSOIDOtGIQtJjQRisbnA3';
   const [recaptchaToken, setRecaptchaToken] = useState<string>('');
-  // I18n import (pieņemam, ka tiek izmantots useTranslation)
-  // Ja nav, pievieno: import { useTranslation } from 'react-i18next'
-  // ...existing code...
-  const { t } = require('react-i18next')
   const {
     register,
     handleSubmit,

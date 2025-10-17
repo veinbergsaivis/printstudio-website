@@ -1,4 +1,4 @@
-import{j as e}from"./vendor-framer-BUeNmMCJ.js";import{a as s,L as x}from"./vendor-react-bOpr2V4s.js";import{u as d}from"./vendor-i18n-Df2fZnjC.js";import{a as u}from"./index-7Vl6vRXG.js";import"./vendor-helmet-Yq0txYyI.js";/**
+import{j as e}from"./vendor-framer-BUeNmMCJ.js";import{a as s,L as x}from"./vendor-react-bOpr2V4s.js";import{u as d}from"./vendor-i18n-Df2fZnjC.js";import{a as u}from"./index-7dMcVh3Z.js";import"./vendor-helmet-Yq0txYyI.js";/**
  * @license lucide-react v0.344.0 - ISC
  *
  * This source code is licensed under the ISC license.
