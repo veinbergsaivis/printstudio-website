@@ -1,9 +1,9 @@
 // src/i18n.ts
-import i18n from 'i18next'
-import { initReactI18next } from 'react-i18next'
-import LanguageDetector from 'i18next-browser-languagedetector'
-import en from './locales/en'
-import lv from './locales/lv'
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
+import en from './locales/en';
+import lv from './locales/lv';
 
 i18n
   .use(LanguageDetector)
@@ -11,19 +11,19 @@ i18n
   .init({
     resources: {
       en: {
-        translation: en,
+        translation: en
       },
       lv: {
-        translation: lv,
-      },
+        translation: lv
+      }
     },
-    lng: 'lv', // Noklusējuma valoda: Latviešu
+    lng: 'lv', // Noklusējuma valoda - Latviešu
     fallbackLng: 'lv',
     interpolation: {
-      escapeValue: false,
+      escapeValue: false
     },
     supportedLngs: ['lv', 'en'],
-    nonExplicitSupportedLngs: true,
-  })
+    nonExplicitSupportedLngs: false,
+  });
 
-export default i18n
+export default i18n;

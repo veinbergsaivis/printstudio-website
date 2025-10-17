@@ -24,6 +24,7 @@ const imageOptimizerConfig = {
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: './', // Relatīvi ceļi production build
   plugins: [react(), ViteImageOptimizer(imageOptimizerConfig)],
   resolve: {
     alias: {
