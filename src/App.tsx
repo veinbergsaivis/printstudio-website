@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 import ErrorBoundary from './components/ErrorBoundary'
-import PasswordGate from './components/PasswordGate'
 
 // Koplietojamie komponenti
 import Navbar from './components/Navbar'
@@ -88,39 +87,37 @@ function App() {
       <HelmetProvider>
         <ErrorBoundary>
           <CookieConsentProvider>
-            <PasswordGate>
-              <div className='flex min-h-screen flex-col bg-background text-text-base'>
-                <Navbar />
-                {/* ✅ pt-nav uz wrappera ap Routes, lai visām lapām ir pareizā atstarpe */}
-                <div className='flex-grow pt-nav'>
-                  <Suspense
-                    fallback={
-                      <div className='container mx-auto px-4 py-8 text-text-muted'>Loading…</div>
-                    }
-                  >
-                    <Routes>
-                      {/* Sākumlapa ar sekcijām */}
-                      <Route path='/' element={<HomePage />} />
-                      {/* ✅ Cenrādis */}
-                      <Route path='/pricing' element={<PricingPage />} />
-                      {/* Citas lapas */}
-                      <Route path='/privacy-policy' element={<PrivacyPolicyPage />} />
-                      <Route path='/terms-of-service' element={<TermsOfServicePage />} />
-                      <Route path='/file-guidelines' element={<FileGuidelinesPage />} />
-                      {/* Blogs */}
-                      <Route path='/blog' element={<BlogPage />} />
-                      <Route path='/blog/:postId' element={<BlogPostPage />} />
-                      {/* 404 */}
-                      <Route path='*' element={<NotFoundPage />} />
-                    </Routes>
-                  </Suspense>
-                </div>
-                {/* ✅ Bultiņa uz augšu (globāli visā lapā) */}
-                <BackToTop />
-                <Footer />
-                <CookieConsent />
+            <div className='flex min-h-screen flex-col bg-background text-text-base'>
+              <Navbar />
+              {/* ✅ pt-nav uz wrappera ap Routes, lai visām lapām ir pareizā atstarpe */}
+              <div className='flex-grow pt-nav'>
+                <Suspense
+                  fallback={
+                    <div className='container mx-auto px-4 py-8 text-text-muted'>Loading…</div>
+                  }
+                >
+                  <Routes>
+                    {/* Sākumlapa ar sekcijām */}
+                    <Route path='/' element={<HomePage />} />
+                    {/* ✅ Cenrādis */}
+                    <Route path='/pricing' element={<PricingPage />} />
+                    {/* Citas lapas */}
+                    <Route path='/privacy-policy' element={<PrivacyPolicyPage />} />
+                    <Route path='/terms-of-service' element={<TermsOfServicePage />} />
+                    <Route path='/file-guidelines' element={<FileGuidelinesPage />} />
+                    {/* Blogs */}
+                    <Route path='/blog' element={<BlogPage />} />
+                    <Route path='/blog/:postId' element={<BlogPostPage />} />
+                    {/* 404 */}
+                    <Route path='*' element={<NotFoundPage />} />
+                  </Routes>
+                </Suspense>
               </div>
-            </PasswordGate>
+              {/* ✅ Bultiņa uz augšu (globāli visā lapā) */}
+              <BackToTop />
+              <Footer />
+              <CookieConsent />
+            </div>
           </CookieConsentProvider>
         </ErrorBoundary>
       </HelmetProvider>
