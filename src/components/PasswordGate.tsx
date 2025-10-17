@@ -50,7 +50,7 @@ export default function PasswordGate({ children }: PasswordGateProps) {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 via-white to-secondary-50 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -60,8 +60,8 @@ export default function PasswordGate({ children }: PasswordGateProps) {
         <div className="bg-white rounded-2xl shadow-2xl p-8 border border-gray-100">
           {/* Logo/Icon */}
           <div className="flex justify-center mb-6">
-            <div className="bg-primary-100 p-4 rounded-full">
-              <Lock className="w-8 h-8 text-primary-600" />
+            <div className="bg-blue-100 p-4 rounded-full">
+              <Lock className="w-8 h-8 text-blue-600" />
             </div>
           </div>
 
@@ -87,7 +87,7 @@ export default function PasswordGate({ children }: PasswordGateProps) {
                   setPassword(e.target.value)
                   setError('')
                 }}
-                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all ${
+                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${
                   error ? 'border-red-500' : 'border-gray-300'
                 }`}
                 placeholder="Ievadiet paroli..."
@@ -106,7 +106,7 @@ export default function PasswordGate({ children }: PasswordGateProps) {
 
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-primary-600 to-secondary-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-primary-700 hover:to-secondary-700 transform hover:scale-[1.02] transition-all duration-200 shadow-lg hover:shadow-xl"
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transform hover:scale-[1.02] transition-all duration-200 shadow-lg hover:shadow-xl"
             >
               Ienākt
             </button>
