@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Button from './Button' // Importējam pielāgoto pogu
 import { cn } from '../lib/utils' // Importējam cn, ja nepieciešams
 import { useForm } from 'react-hook-form'
@@ -7,6 +7,7 @@ type FormValues = {
   name: string
   email: string
   message: string
+  company?: string // honeypot
 }
 
 const ContactForm: React.FC = () => {
@@ -17,15 +18,27 @@ const ContactForm: React.FC = () => {
     reset,
   } = useForm<FormValues>()
 
+  const [serverError, setServerError] = useState<string | null>(null)
+  const [serverOk, setServerOk] = useState<boolean>(false)
+
   const onSubmit = async (data: FormValues) => {
+    setServerError(null)
+    setServerOk(false)
     try {
-      // Šeit var izsaukt API
-      console.log('Form submitted:', data)
-      alert('Thanks for your message! We will get back to you soon.')
+      const res = await fetch('/contact.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+      const json = await res.json().catch(() => ({ ok: false, error: 'Invalid response' }))
+      if (!res.ok || !json.ok) {
+        throw new Error(json.error || 'Failed to send')
+      }
+      setServerOk(true)
       reset()
-    } catch (err) {
+    } catch (err: any) {
       console.error(err)
-      alert('Sorry, something went wrong. Please try again later.')
+      setServerError(err?.message || 'Sorry, something went wrong. Please try again later.')
     }
   }
 
@@ -42,6 +55,25 @@ const ContactForm: React.FC = () => {
     <form onSubmit={handleSubmit(onSubmit)} className='space-y-5 md:space-y-6'>
       {' '}
       {/* Nedaudz pielāgota atstarpe */}
+      {/* Honeypot field - hidden from users */}
+      <input
+        type='text'
+        tabIndex={-1}
+        autoComplete='off'
+        className='hidden'
+        aria-hidden='true'
+        {...register('company')}
+      />
+      {serverOk && (
+        <div className='rounded-md bg-green-50 border border-green-200 text-green-800 px-4 py-2 text-sm'>
+          Paldies! Ziņojums nosūtīts.
+        </div>
+      )}
+      {serverError && (
+        <div className='rounded-md bg-red-50 border border-red-200 text-red-800 px-4 py-2 text-sm'>
+          {serverError}
+        </div>
+      )}
       <div>
         <label htmlFor='name' className='block text-sm font-medium mb-1.5 text-text-base'>
           Name
