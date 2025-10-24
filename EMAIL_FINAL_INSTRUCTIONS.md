@@ -51,16 +51,23 @@ Pass: b6G_TivVkjbXM8nT ✓
    - Labo peles klikšķis uz `contact.config.php`
    - Permissions → `600`
 
-5. **Instalē PHPMailer** (Terminal in cPanel):
+5. **Instalē PHPMailer:**
+
+   **Ja TAV cPanel IR Terminal:**
 
    ```bash
    cd /home4/printstu/repositories/printstudio-website
    composer install --no-dev
    ```
 
+   **Ja cPanel NAV Terminal (tava situācija):**
+   - Skat zemāk sadaļu "📦 PHPMailer instalācija BEZ termināla"
+   - Vai izmanto PowerShell FTP upload (Variants B)
+
 6. **Testē:**
    - https://printstudio.lv/test-email.php
    - Pārbaudi, vai viss zaļš ✓
+   - Ja PHPMailer brīdinājums - tas ir OK, e-pasts strādās ar PHP mail()
 
 7. **DZĒS test-email.php!**
 
@@ -219,25 +226,77 @@ mv contact.config.TLS.php contact.config.php
 
 **Cēlonis:** Composer dependencies nav instalēti
 
+**Risinājums:** Skat zemāk "📦 PHPMailer instalācija BEZ termināla"
+
+---
+
+## 📦 PHPMailer instalācija BEZ termināla
+
+**Ja tavā cPanel NAV Terminal funkcijas, izmanto šo metodi:**
+
+### Metode 1: Lokālā instalācija + FTP upload (IETEICAMS)
+
+1. **Lokāli savā datorā:**
+
+   ```powershell
+   cd "d:\PS WEB\project"
+   composer install --no-dev
+   ```
+
+2. **Upload `vendor/` mapi uz serveri:**
+   - cPanel File Manager
+   - Upload from: `d:\PS WEB\project\vendor\`
+   - Upload to: `/home4/printstu/repositories/printstudio-website/vendor/`
+   - Vai izmanto FTP (FileZilla)
+
+### Metode 2: Manuāla lejupielāde
+
+1. **Lejupielādē PHPMailer:**
+   - Atver: https://github.com/PHPMailer/PHPMailer/releases/latest
+   - Lejupielādē: `PHPMailer-6.x.x.zip`
+
+2. **Izpako lokāli**
+
+3. **Upload uz serveri:**
+   - cPanel File Manager
+   - Izveido: `/home4/printstu/repositories/printstudio-website/vendor/phpmailer/phpmailer/`
+   - Upload visus failus no izpakotas mapes
+
+### Metode 3: Bez PHPMailer (PHP mail() fallback)
+
+**E-pasts strādās arī BEZ PHPMailer!**
+
+`contact.php` automātiski izmanto PHP `mail()` funkciju, ja PHPMailer nav pieejams.
+
+**Izdevumi:**
+
+- ✅ Vienkārši - nekā nevajag instalēt
+- ⚠️ E-pasti var nonākt spamā (bet parasti strādā OK)
+- ⚠️ Failu pielikumi var nestrādāt
+
 **Risinājums:**
 
-```bash
-cd /home4/printstu/repositories/printstudio-website
-composer install --no-dev
-```
+1. Vienkārši turpini bez PHPMailer
+2. Testē, vai e-pasti nāk
+3. Ja viss OK - nav jāuztraucas!
 
 ---
 
 ## ✅ FINĀLAIS CHECKLIST
 
+### Obligātie soļi:
+
 - [ ] `contact.config.php` augšupielādēts uz `public_html/`
 - [ ] Faila atļaujas uzstādītas (600)
-- [ ] PHPMailer instalēts: `composer install --no-dev`
-- [ ] `test-email.php` testēts - viss zaļš ✓
+- [ ] `test-email.php` testēts
 - [ ] Kontakta forma testēta mājaslapā
 - [ ] E-pasts saņemts uz `info@printstudio.lv`
-- [ ] Faila pielikums darbojas (ja testēts)
 - [ ] `test-email.php` DZĒSTS no servera 🔒
+
+### Neobligātie (bet ieteicamie):
+
+- [ ] PHPMailer instalēts (vai izmanto PHP mail() fallback)
+- [ ] Faila pielikums darbojas (ja testēts)
 
 ---
 
