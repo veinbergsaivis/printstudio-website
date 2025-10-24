@@ -39,6 +39,7 @@ Thumbs.db
 
 # Server-side contact form config (do not commit secrets)
 public/contact.config.php
+public/test-email.php
 
 # TypeScript build info
 *.tsbuildinfo

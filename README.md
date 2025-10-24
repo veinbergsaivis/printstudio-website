@@ -23,32 +23,38 @@ Moderna, daudzvalodu drukātavas mājas lapa, veidota ar React, TypeScript un Ta
 ## 🛠️ Tehnoloģijas
 
 ### Core
+
 - **React 18.3** - UI framework
 - **TypeScript 5.6** - Type safety
 - **Vite 6.4** - Build tool
 - **React Router 7.5** - Routing
 
 ### Styling
+
 - **Tailwind CSS 3.4** - Utility-first CSS
 - **Framer Motion 12.10** - Animācijas
 - **Lucide React** - Ikonas
 
 ### Internationalization
+
 - **i18next 23.10** - Tulkošanas sistēma
 - **react-i18next** - React integrācija
 - **i18next-browser-languagedetector** - Automātiska valodas noteikšana
 
 ### SEO & Analytics
+
 - **react-helmet-async** - Meta tags
 - **Google Tag Manager** - Analytics & tracking
 - **Sitemap & Robots.txt** - SEO optimizācija
 
 ### Testing
+
 - **Jest** - Unit tests
 - **Cypress** - E2E tests
 - **React Testing Library** - Component tests
 
 ### Code Quality
+
 - **ESLint** - Linting
 - **Prettier** - Code formatting
 - **Husky** - Git hooks
@@ -58,7 +64,7 @@ Moderna, daudzvalodu drukātavas mājas lapa, veidota ar React, TypeScript un Ta
 
 ### Priekšnosacījumi
 
-- Node.js 18+ 
+- Node.js 18+
 - npm vai yarn
 
 ### Instalācija
@@ -134,6 +140,7 @@ project/
 Detalizēta instrukcija: [QUICK_DEPLOY_GUIDE.md](./QUICK_DEPLOY_GUIDE.md)
 
 **Īsumā:**
+
 1. cPanel → Git Version Control → Create
 2. Clone URL: `https://github.com/veinbergsaivis/printstudio-website.git`
 3. Pielāgo `.cpanel.yml` ar savu username
@@ -162,11 +169,18 @@ npm run build
 2. Nomainiet GTM ID:
    ```html
    <!-- Google Tag Manager -->
-   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-   j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-   'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-   })(window,document,'script','dataLayer','GTM-XXXXXXX');</script>
+   <script>
+     ;(function (w, d, s, l, i) {
+       w[l] = w[l] || []
+       w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' })
+       var f = d.getElementsByTagName(s)[0],
+         j = d.createElement(s),
+         dl = l != 'dataLayer' ? '&l=' + l : ''
+       j.async = true
+       j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl
+       f.parentNode.insertBefore(j, f)
+     })(window, document, 'script', 'dataLayer', 'GTM-XXXXXXX')
+   </script>
    <!-- Nomainiet GTM-XXXXXXX ar savu ID -->
    ```
 
@@ -198,6 +212,17 @@ theme: {
   }
 }
 ```
+
+### E-pasta forma
+
+Detalizēta instrukcija: [EMAIL_SETUP_GUIDE.md](./EMAIL_SETUP_GUIDE.md)
+
+**Serverī nepieciešams:**
+
+1. Izveidot e-pasta kontus (info@, no-reply@)
+2. Konfigurēt `contact.config.php` ar SMTP iestatījumiem
+3. Instalēt PHPMailer: `composer install`
+4. Testēt ar `public/test-email.php`
 
 ### Saturs
 
@@ -252,6 +277,7 @@ Private project - All rights reserved.
 ## 👨‍💻 Autors
 
 **Aivis Veinbergs**
+
 - GitHub: [@veinbergsaivis](https://github.com/veinbergsaivis)
 
 ## 🙏 Atzinības

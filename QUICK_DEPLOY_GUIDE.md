@@ -3,6 +3,7 @@
 ## ✅ Viss ir gatavs!
 
 Projekts ir sagatavots deployment uz cPanel. Visi vajadzīgie faili ir GitHub:
+
 - **Repository:** https://github.com/veinbergsaivis/printstudio-website
 - **Production build:** `dist/` mape jau ir sagatavojta
 
@@ -36,6 +37,7 @@ Repository Name: printstudio-website
 **Vai nu:**
 
 **A) Caur GitHub (ieteicams):**
+
 1. Ej uz: https://github.com/veinbergsaivis/printstudio-website/blob/master/.cpanel.yml
 2. Klikšķini uz pencil ikonas (Edit)
 3. Nomainiet `username` ar savu cPanel lietotājvārdu:
@@ -49,6 +51,7 @@ Repository Name: printstudio-website
 4. Commit changes
 
 **Vai B) Caur cPanel File Manager:**
+
 1. Ej uz repositories/printstudio-website
 2. Atver `.cpanel.yml`
 3. Nomainiet `username`
@@ -86,6 +89,7 @@ git push origin master
 ```
 
 Pēc tam **cPanel**:
+
 1. Git Version Control → Manage → **Pull or Deploy HEAD Commit**
 
 ---
@@ -104,11 +108,13 @@ Port: 21 (FTP) vai 22 (SFTP)
 ```
 
 ### 2. Upload failus:
+
 - Ielādē **VISU** no `dist/` mapes
 - Uz `public_html/` direktoriju
 - Pārraksti esošos failus
 
 ### 3. Pārbaudi atļaujas:
+
 - Māpes: 755
 - Faili: 644
 
@@ -122,12 +128,12 @@ Pārliecinies, ka `public_html/.htaccess` satur:
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
-  
+
   # Don't rewrite files or directories
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
-  
+
   # Rewrite everything else to index.html
   RewriteRule ^ index.html [L]
 </IfModule>
@@ -142,11 +148,13 @@ Pārliecinies, ka `public_html/.htaccess` satur:
 ### "Blank page" vai "404 Not Found"
 
 **Pārbaudi:**
+
 1. Vai `.htaccess` fails ir `public_html/`?
 2. Browser console (F12) - vai ir kļūdas?
 3. cPanel Error Log
 
 **Risinājums:**
+
 - Pārbaudi `.htaccess` saturu
 - Pārbaudi, vai visi faili ir augšupielādēti
 - Pārbaudi failu atļaujas (755/644)
@@ -154,10 +162,11 @@ Pārliecinies, ka `public_html/.htaccess` satur:
 ### "Permission denied"
 
 **Risinājums:**
+
 ```bash
 # cPanel SSH (ja pieejams):
 cd ~/public_html
-chmod 644 *.* 
+chmod 644 *.*
 chmod 755 */
 ```
 
@@ -166,17 +175,20 @@ Vai caur cPanel File Manager → Select All → Permissions
 ### "CSS/JS not loading"
 
 **Pārbaudi:**
+
 1. Browser console (F12)
 2. Vai ceļi ir relatīvi (`/assets/...`)?
 3. Vai `.htaccess` ir pareizs?
 
 **Risinājums:**
+
 - Clear browser cache (Ctrl+Shift+Del)
 - Pārbaudi `index.html` - vai ceļi ir pareizi?
 
 ### Git pull nestrādā
 
 **Risinājums:**
+
 1. cPanel → Git Version Control → Manage
 2. Pārbaudi, vai repository URL ir pareizs
 3. Mēģini "Update" → Pull
@@ -194,19 +206,32 @@ Vai caur cPanel File Manager → Select All → Permissions
 ## 🎉 Pēc Veiksmīga Deployment
 
 ✅ **Pārbaudi:**
+
 - [ ] Mājas lapa ielādējas: `http://tavs-domens.lv`
 - [ ] Visi attēli redzami
 - [ ] Navigācija strādā (About, Services, utt.)
 - [ ] Valodu maiņa strādā (LV ⇄ EN)
-- [ ] Kontakta forma strādā
+- [ ] Kontakta forma strādā (skat. zemāk)
 - [ ] Mobile versija izskatās labi
 - [ ] Browser console (F12) - nav kļūdu
 
+✅ **E-pasta forma:**
+
+- Skat detalizētu ceļvedi: **[EMAIL_SETUP_GUIDE.md](./EMAIL_SETUP_GUIDE.md)**
+- Ātrā versija: **[EMAIL_QUICK_REFERENCE.md](./EMAIL_QUICK_REFERENCE.md)**
+- Nepieciešams:
+  1. Izveidot e-pasta kontus cPanel
+  2. Konfigurēt `contact.config.php`
+  3. Instalēt PHPMailer: `composer install`
+  4. Testēt ar `test-email.php`
+
 ✅ **Google Analytics:**
+
 - Pārbaudi, vai GTM Tag strādā (Google Tag Manager)
 - Skat realtime visitors Google Analytics
 
 ✅ **SEO:**
+
 - Pārbaudi `robots.txt`: `http://tavs-domens.lv/robots.txt`
 - Pārbaudi `sitemap.xml`: `http://tavs-domens.lv/sitemap.xml`
 - Reģistrē vietni Google Search Console
