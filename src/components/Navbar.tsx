@@ -162,7 +162,8 @@ const Navbar: React.FC = () => {
 
   const handleRouteClick = (path: string) => {
     setMobileMenuOpen(false)
-    if (location.pathname !== path) navigate(path)
+    // Always navigate to clear any hash and go to the page
+    navigate(path)
   }
 
   const isPricingActive = location.pathname === '/pricing'
