@@ -149,6 +149,8 @@ const Navbar: React.FC = () => {
       const top = el.getBoundingClientRect().top + window.scrollY - h - 15
       window.scrollTo({ top, behavior: 'smooth' })
       setActiveSection(id)
+      // Update URL hash without triggering page reload
+      window.history.pushState(null, '', `#${id}`)
     }
     setMobileMenuOpen(false)
   }
