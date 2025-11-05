@@ -1,16 +1,13 @@
 // src/App.tsx
-import React, { Suspense, useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
+import React, { useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { HelmetProvider } from 'react-helmet-async'
-import ErrorBoundary from './components/ErrorBoundary'
 
 // Koplietojamie komponenti
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import CookieConsent from './components/CookieConsent'
 import BackToTop from './components/BackToTop' // ✅ JAUNS: bultiņa uz augšu
-import SEO from './components/SEO' // SEO komponente
+import ErrorBoundary from './components/ErrorBoundary' // ✅ Error handling
 
 // Context Provider
 import { CookieConsentProvider } from './contexts/CookieConsentContext'
@@ -27,18 +24,19 @@ import FaqSection from './sections/FaqSection'
 import FileGuidelinesPage from './pages/FileGuidelinesPage'
 
 // Lapas
-const PrivacyPolicyPage = React.lazy(() => import('./pages/PrivacyPolicyPage'))
-const TermsOfServicePage = React.lazy(() => import('./pages/TermsOfServicePage'))
-const BlogPage = React.lazy(() => import('./pages/BlogPage'))
-const BlogPostPage = React.lazy(() => import('./pages/BlogPostPage'))
-const NotFoundPage = React.lazy(() => import('./pages/NotFoundPage'))
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage'
+import TermsOfServicePage from './pages/TermsOfServicePage'
+import BlogPage from './pages/BlogPage'
+import BlogPostPage from './pages/BlogPostPage'
+import NotFoundPage from './pages/NotFoundPage'
 
 // ✅ JAUNA lapa: Cenrādis
-const PricingPage = React.lazy(() => import('./pages/PricingPage'))
+import PricingPage from './pages/PricingPage'
 
 // — HomePage (sadaļas vienā lapā) —
 const HomePage: React.FC = () => {
   useEffect(() => {
+    document.title = 'PrintStudio | Think Bigger. Print Bolder.'
     document.documentElement.style.scrollBehavior = 'smooth'
     return () => {
       document.documentElement.style.scrollBehavior = 'auto'
@@ -47,7 +45,6 @@ const HomePage: React.FC = () => {
 
   return (
     <main>
-      <SEO />
       <HeroSection />
       <AboutSection />
       <ServicesSection />
@@ -62,66 +59,44 @@ const HomePage: React.FC = () => {
 
 // — App ar maršrutēšanu —
 function App() {
-  const { i18n } = useTranslation()
-
-  // Contrast check disabled in development to reduce console noise
-  // Re-enable for accessibility audits by uncommenting below:
-  /*
-  useEffect(() => {
-    // Pārbauda krāsu kontrastu pēc komponentes ielādes
-    import('./utils/colorContrast').then(({ checkAllTextContrast }) => {
-      checkAllTextContrast();
-    });
-  }, []);
-  */
-
-  useEffect(() => {
-    // Sync <html lang> with current i18n language
-    try {
-      document.documentElement.lang = i18n.language || 'lv'
-    } catch {}
-  }, [i18n.language])
-
   return (
-    <Router>
-      <HelmetProvider>
-        <ErrorBoundary>
-          <CookieConsentProvider>
-            <div className='flex min-h-screen flex-col bg-background text-text-base'>
-              <Navbar />
-              {/* ✅ pt-nav uz wrappera ap Routes, lai visām lapām ir pareizā atstarpe */}
-              <div className='flex-grow pt-nav'>
-                <Suspense
-                  fallback={
-                    <div className='container mx-auto px-4 py-8 text-text-muted'>Loading…</div>
-                  }
-                >
-                  <Routes>
-                    {/* Sākumlapa ar sekcijām */}
-                    <Route path='/' element={<HomePage />} />
-                    {/* ✅ Cenrādis */}
-                    <Route path='/pricing' element={<PricingPage />} />
-                    {/* Citas lapas */}
-                    <Route path='/privacy-policy' element={<PrivacyPolicyPage />} />
-                    <Route path='/terms-of-service' element={<TermsOfServicePage />} />
-                    <Route path='/file-guidelines' element={<FileGuidelinesPage />} />
-                    {/* Blogs */}
-                    <Route path='/blog' element={<BlogPage />} />
-                    <Route path='/blog/:postId' element={<BlogPostPage />} />
-                    {/* 404 */}
-                    <Route path='*' element={<NotFoundPage />} />
-                  </Routes>
-                </Suspense>
-              </div>
-              {/* ✅ Bultiņa uz augšu (globāli visā lapā) */}
-              <BackToTop />
-              <Footer />
-              <CookieConsent />
-            </div>
-          </CookieConsentProvider>
-        </ErrorBoundary>
-      </HelmetProvider>
+    <ErrorBoundary>
+      <Router>
+        <CookieConsentProvider>
+          <div className="flex min-h-screen flex-col bg-background">
+            <Navbar />
+
+            {/* ✅ pt-nav uz wrappera ap Routes, lai visām lapām ir pareizā atstarpe */}
+            <div className="flex-grow pt-nav">
+              <Routes>
+                {/* Sākumlapa ar sekcijām */}
+                <Route path="/" element={<HomePage />} />
+
+              {/* ✅ Cenrādis */}
+              <Route path="/pricing" element={<PricingPage />} />
+
+              {/* Citas lapas */}
+              <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+              <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+              <Route path="/file-guidelines" element={<FileGuidelinesPage />} />
+              {/* Blogs */}
+              <Route path="/blog" element={<BlogPage />} />
+              <Route path="/blog/:postId" element={<BlogPostPage />} />
+
+              {/* 404 */}
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </div>
+
+          {/* ✅ Bultiņa uz augšu (globāli visā lapā) */}
+          <BackToTop />
+
+          <Footer />
+          <CookieConsent />
+        </div>
+      </CookieConsentProvider>
     </Router>
+    </ErrorBoundary>
   )
 }
 
