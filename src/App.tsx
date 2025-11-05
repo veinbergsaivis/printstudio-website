@@ -1,13 +1,12 @@
 // src/App.tsx
 import React, { useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { HashRouter as Router, Routes, Route } from 'react-router-dom'
 
 // Koplietojamie komponenti
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import CookieConsent from './components/CookieConsent'
 import BackToTop from './components/BackToTop' // ✅ JAUNS: bultiņa uz augšu
-import ErrorBoundary from './components/ErrorBoundary' // ✅ Error handling
 
 // Context Provider
 import { CookieConsentProvider } from './contexts/CookieConsentContext'
@@ -60,43 +59,41 @@ const HomePage: React.FC = () => {
 // — App ar maršrutēšanu —
 function App() {
   return (
-    <ErrorBoundary>
-      <Router>
-        <CookieConsentProvider>
-          <div className="flex min-h-screen flex-col bg-background">
-            <Navbar />
+    <Router>
+      <CookieConsentProvider>
+        <div className="flex min-h-screen flex-col bg-background">
+          <Navbar />
 
-            {/* ✅ pt-nav uz wrappera ap Routes, lai visām lapām ir pareizā atstarpe */}
-            <div className="flex-grow pt-nav">
-              <Routes>
-                {/* Sākumlapa ar sekcijām */}
-                <Route path="/" element={<HomePage />} />
+          {/* ✅ pt-nav uz wrappera ap Routes, lai visām lapām ir pareizā atstarpe */}
+          <div className="flex-grow pt-nav">
+            <Routes>
+              {/* Sākumlapa ar sekcijām */}
+              <Route path="/" element={<HomePage />} />
 
-                {/* ✅ Cenrādis */}
-                <Route path="/pricing" element={<PricingPage />} />
+              {/* ✅ Cenrādis */}
+              <Route path="/pricing" element={<PricingPage />} />
 
-                {/* Citas lapas */}
-                <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-                <Route path="/terms-of-service" element={<TermsOfServicePage />} />
-                <Route path="/file-guidelines" element={<FileGuidelinesPage />} />
-                {/* Blogs */}
-                <Route path="/blog" element={<BlogPage />} />
-                <Route path="/blog/:postId" element={<BlogPostPage />} />
+              {/* Citas lapas */}
+              <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+              <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+              <Route path="/file-guidelines" element={<FileGuidelinesPage />} />
+              {/* Blogs */}
+              <Route path="/blog" element={<BlogPage />} />
+              <Route path="/blog/:postId" element={<BlogPostPage />} />
 
-                {/* 404 */}
-                <Route path="*" element={<NotFoundPage />} />
-              </Routes>
-            </div>
-
-            {/* ✅ Bultiņa uz augšu (globāli visā lapā) */}
-            <BackToTop />
-
-            <Footer />
-            <CookieConsent />
+              {/* 404 */}
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
           </div>
-        </CookieConsentProvider>
-      </Router>
-    </ErrorBoundary>
+
+          {/* ✅ Bultiņa uz augšu (globāli visā lapā) */}
+          <BackToTop />
+
+          <Footer />
+          <CookieConsent />
+        </div>
+      </CookieConsentProvider>
+    </Router>
   )
 }
 
