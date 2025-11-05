@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "deploy": "npm run build && powershell -ExecutionPolicy Bypass -File .\\deploy-ftp.ps1",
     "lint": "eslint . --ext .ts,.tsx --fix",
     "preview": "vite preview",
     "optimize-images": "vite optimize",
