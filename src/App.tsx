@@ -72,30 +72,30 @@ function App() {
                 {/* Sākumlapa ar sekcijām */}
                 <Route path="/" element={<HomePage />} />
 
-              {/* ✅ Cenrādis */}
-              <Route path="/pricing" element={<PricingPage />} />
+                {/* ✅ Cenrādis */}
+                <Route path="/pricing" element={<PricingPage />} />
 
-              {/* Citas lapas */}
-              <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-              <Route path="/terms-of-service" element={<TermsOfServicePage />} />
-              <Route path="/file-guidelines" element={<FileGuidelinesPage />} />
-              {/* Blogs */}
-              <Route path="/blog" element={<BlogPage />} />
-              <Route path="/blog/:postId" element={<BlogPostPage />} />
+                {/* Citas lapas */}
+                <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+                <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+                <Route path="/file-guidelines" element={<FileGuidelinesPage />} />
+                {/* Blogs */}
+                <Route path="/blog" element={<BlogPage />} />
+                <Route path="/blog/:postId" element={<BlogPostPage />} />
 
-              {/* 404 */}
-              <Route path="*" element={<NotFoundPage />} />
-            </Routes>
+                {/* 404 */}
+                <Route path="*" element={<NotFoundPage />} />
+              </Routes>
+            </div>
+
+            {/* ✅ Bultiņa uz augšu (globāli visā lapā) */}
+            <BackToTop />
+
+            <Footer />
+            <CookieConsent />
           </div>
-
-          {/* ✅ Bultiņa uz augšu (globāli visā lapā) */}
-          <BackToTop />
-
-          <Footer />
-          <CookieConsent />
-        </div>
-      </CookieConsentProvider>
-    </Router>
+        </CookieConsentProvider>
+      </Router>
     </ErrorBoundary>
   )
 }
