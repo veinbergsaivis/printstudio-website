@@ -162,8 +162,10 @@ const Navbar: React.FC = () => {
 
   const handleRouteClick = (path: string) => {
     setMobileMenuOpen(false)
-    // Always navigate to clear any hash and go to the page
+    // Always navigate to ensure we go to the page (even from hash URLs)
     navigate(path)
+    // Scroll to top when navigating to a page
+    window.scrollTo(0, 0)
   }
 
   const isPricingActive = location.pathname === '/pricing'
