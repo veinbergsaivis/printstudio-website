@@ -33,7 +33,10 @@ $message = trim($data['message'] ?? '');
 $honeypot = trim($data['company'] ?? ''); // hidden field to catch bots
 $recaptchaToken = trim($data['recaptchaToken'] ?? '');
 
-// reCAPTCHA v3 pārbaude
+// ⚠️ TEMPORARY: reCAPTCHA check disabled
+// TODO: Register new reCAPTCHA keys for printstudio.lv domain at https://www.google.com/recaptcha/admin/create
+// Current key '6LcA2OOrAAAAANbWMHQqlSOIDOtGIQtJjQRisbnA3' is not valid for this domain
+/*
 $recaptchaSecret = '6LcA2OOrAAAAAktrGXf0J-Ko3zg3pt9DXfRsnO8F';
 if ($recaptchaToken === '') {
   http_response_code(400);
@@ -47,6 +50,7 @@ if (!$captchaSuccess['success'] || $captchaSuccess['score'] < 0.5) {
   echo json_encode(['ok' => false, 'error' => 'reCAPTCHA pārbaude neizdevās']);
   exit;
 }
+*/
 
 // Faila apstrāde
 $file = null;

@@ -16,8 +16,9 @@ type FormValues = {
 
 const ContactForm: React.FC = () => {
   const { t } = useTranslation()
-  const RECAPTCHA_SITE_KEY = '6LcA2OOrAAAAANbWMHQqlSOIDOtGIQtJjQRisbnA3';
-  const [recaptchaToken, setRecaptchaToken] = useState<string>('');
+  // reCAPTCHA temporarily disabled - need to register key for printstudio.lv domain
+  const RECAPTCHA_SITE_KEY = '' // '6LcA2OOrAAAAANbWMHQqlSOIDOtGIQtJjQRisbnA3';
+  const [recaptchaToken, setRecaptchaToken] = useState<string>('')
   const {
     register,
     handleSubmit,
@@ -32,30 +33,32 @@ const ContactForm: React.FC = () => {
     setServerError(null)
     setServerOk(false)
     try {
-      const formData = new FormData();
-      formData.append('name', data.name);
-      formData.append('email', data.email);
-      formData.append('message', data.message);
-      formData.append('company', data.company || '');
+      const formData = new FormData()
+      formData.append('name', data.name)
+      formData.append('email', data.email)
+      formData.append('message', data.message)
+      formData.append('company', data.company || '')
       if (data.file && data.file.length > 0) {
-        formData.append('file', data.file[0]);
+        formData.append('file', data.file[0])
       }
-      formData.append('recaptchaToken', recaptchaToken);
+      formData.append('recaptchaToken', recaptchaToken)
       const res = await fetch('/contact.php', {
         method: 'POST',
         body: formData,
-      });
-      const json = await res.json().catch(() => ({ ok: false, error: t('errorMessage', 'Radās kļūda.') }));
+      })
+      const json = await res
+        .json()
+        .catch(() => ({ ok: false, error: t('errorMessage', 'Radās kļūda.') }))
       if (!res.ok || !json.ok) {
-        throw new Error(json.error || t('errorMessage', 'Radās kļūda.'));
+        throw new Error(json.error || t('errorMessage', 'Radās kļūda.'))
       }
-      setServerOk(true);
-      reset();
+      setServerOk(true)
+      reset()
     } catch (err: any) {
-      console.error(err);
-      setServerError(err?.message || t('errorMessage', 'Radās kļūda.'));
+      console.error(err)
+      setServerError(err?.message || t('errorMessage', 'Radās kļūda.'))
     }
-  };
+  }
 
   // Bāzes stili ievades laukiem, lai neatkārtotos
   const inputBaseStyles = cn(
@@ -68,8 +71,10 @@ const ContactForm: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className='space-y-5 md:space-y-6'>
-      {/* Google reCAPTCHA v3 token */}
-      <ReCaptchaV3 siteKey={RECAPTCHA_SITE_KEY} onToken={setRecaptchaToken} />
+      {/* Google reCAPTCHA v3 token - temporarily disabled */}
+      {RECAPTCHA_SITE_KEY && (
+        <ReCaptchaV3 siteKey={RECAPTCHA_SITE_KEY} onToken={setRecaptchaToken} />
+      )}
       {/* Honeypot lauks */}
       <input
         type='text'
@@ -96,7 +101,9 @@ const ContactForm: React.FC = () => {
         <input
           type='text'
           id='name'
-          {...register('name', { required: t('contact.form.errors.required', 'Lauks ir obligāts') })}
+          {...register('name', {
+            required: t('contact.form.errors.required', 'Lauks ir obligāts'),
+          })}
           className={inputBaseStyles}
           placeholder={t('contact.form.placeholders.name', 'Jūsu vārds')}
           autoComplete='name'
@@ -112,7 +119,10 @@ const ContactForm: React.FC = () => {
           id='email'
           {...register('email', {
             required: t('contact.form.errors.required', 'Lauks ir obligāts'),
-            pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: t('contact.form.errors.email', 'Nederīgs e-pasts') },
+            pattern: {
+              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+              message: t('contact.form.errors.email', 'Nederīgs e-pasts'),
+            },
           })}
           className={inputBaseStyles}
           placeholder={t('contact.form.placeholders.email', 'Jūsu e-pasts')}
@@ -129,7 +139,10 @@ const ContactForm: React.FC = () => {
           rows={4}
           {...register('message', {
             required: t('contact.form.errors.required', 'Lauks ir obligāts'),
-            minLength: { value: 10, message: t('contact.form.errors.messageShort', 'Ziņa ir pārāk īsa') },
+            minLength: {
+              value: 10,
+              message: t('contact.form.errors.messageShort', 'Ziņa ir pārāk īsa'),
+            },
           })}
           className={inputBaseStyles}
           placeholder={t('contact.form.placeholders.message', 'Pastāstiet par savu projektu')}
@@ -153,7 +166,9 @@ const ContactForm: React.FC = () => {
         {errors.file && <p className='mt-1 text-sm text-da-red'>{String(errors.file.message)}</p>}
       </div>
       <Button type='submit' variant='primary' size='md' className='w-full' disabled={isSubmitting}>
-        {isSubmitting ? t('contact.form.sending', 'Sūtīšana...') : t('contact.form.submit', 'Sūtīt Ziņu')}
+        {isSubmitting
+          ? t('contact.form.sending', 'Sūtīšana...')
+          : t('contact.form.submit', 'Sūtīt Ziņu')}
       </Button>
     </form>
   )

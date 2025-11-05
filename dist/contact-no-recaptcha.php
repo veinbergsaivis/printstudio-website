@@ -1,4 +1,5 @@
 <?php
+// TEMPORARY VERSION - NO RECAPTCHA CHECK (for testing only!)
 // Contact form handler for cPanel (PHP)
 // - Tries PHPMailer via Composer if available (SMTP support)
 // - Falls back to PHP mail() if PHPMailer not installed
@@ -33,9 +34,8 @@ $message = trim($data['message'] ?? '');
 $honeypot = trim($data['company'] ?? ''); // hidden field to catch bots
 $recaptchaToken = trim($data['recaptchaToken'] ?? '');
 
-// ⚠️ TEMPORARY: reCAPTCHA check disabled
-// TODO: Register new reCAPTCHA keys for printstudio.lv domain at https://www.google.com/recaptcha/admin/create
-// Current key '6LcA2OOrAAAAANbWMHQqlSOIDOtGIQtJjQRisbnA3' is not valid for this domain
+// ⚠️ TEMPORARY: Skip reCAPTCHA check for testing
+// TODO: Register new reCAPTCHA keys for printstudio.lv domain
 /*
 $recaptchaSecret = '6LcA2OOrAAAAAktrGXf0J-Ko3zg3pt9DXfRsnO8F';
 if ($recaptchaToken === '') {
