@@ -24,10 +24,33 @@ const ContactForm: React.FC = () => {
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
+    setError,
+    watch,
   } = useForm<FormValues>()
 
   const [serverError, setServerError] = useState<string | null>(null)
   const [serverOk, setServerOk] = useState<boolean>(false)
+  const [selectedFileName, setSelectedFileName] = useState<string>('')
+
+  // Client-side file limits (keep in sync with server)
+  const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10 MB
+  const allowedTypes = [
+    'application/pdf',
+    'image/jpeg',
+    'image/png',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  ]
+
+  const watchedFile = watch('file') as FileList | undefined
+  React.useEffect(() => {
+    if (watchedFile && watchedFile.length > 0) {
+      const f = watchedFile[0]
+      setSelectedFileName(f.name)
+    } else {
+      setSelectedFileName('')
+    }
+  }, [watchedFile])
 
   const onSubmit = async (data: FormValues) => {
     setServerError(null)
@@ -168,13 +191,53 @@ const ContactForm: React.FC = () => {
         <label htmlFor='file' className='block text-sm font-medium mb-1.5 text-text-base'>
           {t('contact.form.file', 'Pievienot failu')}
         </label>
-        <input
-          type='file'
-          id='file'
-          accept='.pdf,.jpg,.jpeg,.png,.doc,.docx'
-          {...register('file')}
-          className={inputBaseStyles}
-        />
+        <div className='flex items-center gap-3'>
+          <input
+            type='file'
+            id='file'
+            accept='.pdf,.jpg,.jpeg,.png,.doc,.docx'
+            {...register('file', {
+              onChange: (e: any) => {
+                const fl = e.target.files
+                if (!fl || fl.length === 0) {
+                  setSelectedFileName('')
+                  return
+                }
+                const f = fl[0]
+                // Client-side validation
+                if (f.size > MAX_FILE_SIZE) {
+                  setError('file', {
+                    type: 'manual',
+                    message: `Fails ir pārāk liels (max ${Math.round(MAX_FILE_SIZE / 1024 / 1024)}MB)`,
+                  })
+                } else if (allowedTypes.length && !allowedTypes.includes(f.type)) {
+                  setError('file', { type: 'manual', message: 'Faila tips nav atļauts' })
+                } else {
+                  // clear any previous file errors
+                  if (errors.file) {
+                    // @ts-ignore
+                    delete errors.file
+                  }
+                }
+                setSelectedFileName(f.name)
+              },
+            })}
+            className='hidden'
+          />
+
+          <button
+            type='button'
+            onClick={() => document.getElementById('file')?.click()}
+            className='inline-flex items-center gap-2 px-4 py-2 rounded bg-gray-200 text-sm'
+          >
+            {t('contact.form.chooseFile', 'Choose File')}
+          </button>
+
+          <div className='text-sm text-muted'>
+            {selectedFileName ||
+              `${Math.round(MAX_FILE_SIZE / 1024 / 1024)} MB, PDF/JPG/PNG/DOC/DOCX`}
+          </div>
+        </div>
         {errors.file && <p className='mt-1 text-sm text-da-red'>{String(errors.file.message)}</p>}
       </div>
       <Button type='submit' variant='primary' size='md' className='w-full' disabled={isSubmitting}>
