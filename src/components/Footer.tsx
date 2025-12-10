@@ -43,6 +43,19 @@ const Footer: React.FC = () => {
     const top = el.getBoundingClientRect().top + window.scrollY
     const offsetTop = Math.max(top - navH - 15, 0)
     window.scrollTo({ top: offsetTop, behavior: 'smooth' })
+    // Update the URL hash without adding a new history entry so the link
+    // reflects the current section (e.g., #testimonials). Use replaceState
+    // when available to avoid cluttering history.
+    try {
+      if (window.history && typeof window.history.replaceState === 'function') {
+        window.history.replaceState(null, '', `#${id}`)
+      } else {
+        window.location.hash = `#${id}`
+      }
+    } catch (e) {
+      // fallback
+      window.location.hash = `#${id}`
+    }
   }
 
   const handleFooterNavClick = (id: string) => {
@@ -66,7 +79,9 @@ const Footer: React.FC = () => {
     }
 
     // Send to server
-    const submitBtn = (e.target as HTMLFormElement).querySelector('button[type="submit"]') as HTMLButtonElement
+    const submitBtn = (e.target as HTMLFormElement).querySelector(
+      'button[type="submit"]'
+    ) as HTMLButtonElement
     if (submitBtn) submitBtn.disabled = true
 
     fetch('/newsletter.php', {
@@ -260,8 +275,14 @@ const Footer: React.FC = () => {
                   className='mt-1 w-4 h-4 rounded border border-border-color bg-surface text-primary cursor-pointer transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-0'
                   aria-label={t('footer.newsletter.agreeLabel') || 'I want to receive newsletter'}
                 />
-                <label htmlFor='newsletter-agree' className='text-xs text-gray-300 leading-snug cursor-pointer pt-0.5'>
-                  {t('footer.newsletter.agreeLabel', 'Apliecinu, ka vēlos saņemt informāciju e-pastā')}
+                <label
+                  htmlFor='newsletter-agree'
+                  className='text-xs text-gray-300 leading-snug cursor-pointer pt-0.5'
+                >
+                  {t(
+                    'footer.newsletter.agreeLabel',
+                    'Apliecinu, ka vēlos saņemt informāciju e-pastā'
+                  )}
                 </label>
               </div>
               <Button type='submit' variant='primary' size='sm' className='w-full rounded-lg'>
