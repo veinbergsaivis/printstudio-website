@@ -22,6 +22,7 @@ const sectionIds = [
 const Footer: React.FC = () => {
   const { t } = useTranslation()
   const [email, setEmail] = useState('')
+  const [agreeNewsletter, setAgreeNewsletter] = useState(false)
 
   const location = useLocation()
   const navigate = useNavigate()
@@ -55,8 +56,13 @@ const Footer: React.FC = () => {
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault()
+    if (!agreeNewsletter) {
+      alert(t('footer.newsletter.agreeError') || 'Please confirm you want to receive newsletter')
+      return
+    }
     console.log('Newsletter subscription:', email)
     setEmail('')
+    setAgreeNewsletter(false)
     alert(t('footer.newsletter.successMessage') || 'Thanks for subscribing!')
   }
 
@@ -202,7 +208,7 @@ const Footer: React.FC = () => {
             <p className='mb-2 text-sm text-gray-300'>
               {t('footer.newsletter.description', 'Subscribe for updates.')}
             </p>
-            <form onSubmit={handleSubscribe} className='space-y-1.5' noValidate>
+            <form onSubmit={handleSubscribe} className='space-y-2' noValidate>
               <label htmlFor='newsletter-email' className='sr-only'>
                 {t('footer.newsletter.placeholder', 'Your email address')}
               </label>
@@ -218,6 +224,19 @@ const Footer: React.FC = () => {
                 autoComplete='email'
                 aria-label={t('footer.newsletter.placeholder', 'Your email address')}
               />
+              <div className='flex items-start gap-2'>
+                <input
+                  id='newsletter-agree'
+                  type='checkbox'
+                  checked={agreeNewsletter}
+                  onChange={e => setAgreeNewsletter(e.target.checked)}
+                  className='mt-1 w-4 h-4 rounded border border-border-color bg-surface text-primary cursor-pointer transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-0'
+                  aria-label={t('footer.newsletter.agreeLabel') || 'I want to receive newsletter'}
+                />
+                <label htmlFor='newsletter-agree' className='text-xs text-gray-300 leading-snug cursor-pointer pt-0.5'>
+                  {t('footer.newsletter.agreeLabel', 'Apliecinčiu, ka vēlos saņemt informāciju e-pastā')}
+                </label>
+              </div>
               <Button type='submit' variant='primary' size='sm' className='w-full rounded-lg'>
                 {t('footer.newsletter.button', 'Subscribe')}
               </Button>
