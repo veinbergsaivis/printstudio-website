@@ -48,10 +48,16 @@ const ContactForm: React.FC = () => {
         body: formData,
       })
 
-      const json = await res.json().catch(() => ({ ok: false, error: 'Network error' }))
+      let json
+      try {
+        json = await res.json()
+      } catch (e) {
+        console.error('JSON parse error:', e, 'Response status:', res.status)
+        throw new Error(`Server error (${res.status}): Invalid response`)
+      }
 
       if (!res.ok || !json.ok) {
-        const errorMsg = json.error || json.message || 'Nezināma kļūda'
+        const errorMsg = json.error || json.message || `Error: ${res.status}`
         throw new Error(errorMsg)
       }
 

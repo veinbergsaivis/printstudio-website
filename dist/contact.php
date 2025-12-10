@@ -163,35 +163,40 @@ if ((file_exists($autoload1) || file_exists($autoload2)) && $cfg['smtp']['enable
 
 // Fallback: PHP mail() - with proper UTF-8 headers
 $headers = "MIME-Version: 1.0\r\n";
-$headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
 $headers .= "Content-Transfer-Encoding: 8bit\r\n";
 $headers .= "From: {$cfg['from']}\r\n";
 $headers .= "Reply-To: {$email}\r\n";
 $headers .= "X-Mailer: PHP/" . phpversion();
+
+$mailBody = "Name: {$name}\nEmail: {$email}\n\nMessage:\n{$message}\n";
 
 // For attachments with mail(), we need multipart MIME
 if ($file) {
   $boundary = "boundary_" . md5(time());
   $headers .= "\r\nContent-Type: multipart/mixed; boundary=\"{$boundary}\"";
   
-  $body = "--{$boundary}\r\n";
-  $body .= "Content-Type: text/plain; charset=UTF-8\r\n";
-  $body .= "Content-Transfer-Encoding: 8bit\r\n\r\n";
-  $body .= "Name: {$name}\nEmail: {$email}\n\nMessage:\n{$message}\n";
-  $body .= "\r\n--{$boundary}\r\n";
-  $body .= "Content-Type: application/octet-stream\r\n";
-  $body .= "Content-Transfer-Encoding: base64\r\n";
-  $body .= "Content-Disposition: attachment; filename=\"" . basename($file['name']) . "\"\r\n\r\n";
-  $body .= chunk_split(base64_encode(file_get_contents($file['tmp_name'])));
-  $body .= "\r\n--{$boundary}--";
+  $mailBody = "--{$boundary}\r\n";
+  $mailBody .= "Content-Type: text/plain; charset=UTF-8\r\n";
+  $mailBody .= "Content-Transfer-Encoding: 8bit\r\n\r\n";
+  $mailBody .= "Name: {$name}\nEmail: {$email}\n\nMessage:\n{$message}\n";
+  $mailBody .= "\r\n--{$boundary}\r\n";
+  $mailBody .= "Content-Type: application/octet-stream\r\n";
+  $mailBody .= "Content-Transfer-Encoding: base64\r\n";
+  $mailBody .= "Content-Disposition: attachment; filename=\"" . basename($file['name']) . "\"\r\n\r\n";
+  $mailBody .= chunk_split(base64_encode(file_get_contents($file['tmp_name'])));
+  $mailBody .= "\r\n--{$boundary}--";
+} else {
+  $headers .= "\r\nContent-Type: text/plain; charset=UTF-8";
 }
 
-$sent = @mail($cfg['to'], $subject, $body, $headers);
+$sent = @mail($cfg['to'], $subject, $mailBody, $headers);
 
 if ($sent) {
+  http_response_code(200);
   echo json_encode(['ok' => true]);
+  exit;
 } else {
   http_response_code(500);
   echo json_encode(['ok' => false, 'error' => 'Failed to send email']);
-}
+  exit;
 }
