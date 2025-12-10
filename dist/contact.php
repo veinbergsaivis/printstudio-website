@@ -3,10 +3,12 @@
 // - Tries PHPMailer via Composer if available (SMTP support)
 // - Falls back to PHP mail() if PHPMailer not installed
 
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
+// UTF-8 encoding for email
+ini_set('default_charset', 'UTF-8');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
   http_response_code(200);
@@ -118,79 +120,72 @@ if (file_exists($configPath)) {
 $subject = 'New contact form message from ' . $name;
 $body = "Name: {$name}\nEmail: {$email}\n\nMessage:\n{$message}\n";
 
-// Faila pielikums e-pastam (PHPMailer)
-if ($cfg['smtp']['enabled'] && $file) {
-  // PHPMailer
-  $vendorPath = $cfg['repo_root'] . '/vendor/autoload.php';
-  if (file_exists($vendorPath)) {
-    require_once $vendorPath;
-    $mail = new PHPMailer\PHPMailer\PHPMailer(true);
-    try {
-      $mail->isSMTP();
-      $mail->Host = $cfg['smtp']['host'];
-      $mail->SMTPAuth = true;
-      $mail->Username = $cfg['smtp']['user'];
-      $mail->Password = $cfg['smtp']['pass'];
-      $mail->SMTPSecure = $cfg['smtp']['secure'];
-      $mail->Port = $cfg['smtp']['port'];
-      $mail->setFrom($cfg['from'], 'PrintStudio');
-      $mail->addAddress($cfg['to']);
-      $mail->Subject = $subject;
-      $mail->Body = $body;
-      $mail->addAttachment($file['tmp_name'], $file['name']);
-      $mail->send();
-      echo json_encode(['ok' => true]);
-      exit;
-    } catch (Exception $e) {
-      http_response_code(500);
-      echo json_encode(['ok' => false, 'error' => 'E-pasta sūtīšana neizdevās: ' . $mail->ErrorInfo]);
-      exit;
-    }
-  }
-}
-
-// Try PHPMailer if available and enabled
+// Try PHPMailer first (best for attachments & encoding)
 $autoload1 = $cfg['repo_root'] . '/vendor/autoload.php';
-$autoload2 = __DIR__ . '/../vendor/autoload.php'; // in case vendor is copied near public_html
+$autoload2 = __DIR__ . '/../vendor/autoload.php';
 
-$phpmailerAvailable = file_exists($autoload1) || file_exists($autoload2);
-
-if ($phpmailerAvailable && (!empty($cfg['smtp']['enabled']))) {
-  // Load Composer autoload
+if ((file_exists($autoload1) || file_exists($autoload2)) && $cfg['smtp']['enabled']) {
   if (file_exists($autoload1)) {
     require_once $autoload1;
   } elseif (file_exists($autoload2)) {
     require_once $autoload2;
   }
+  
   try {
     $mailer = new PHPMailer\PHPMailer\PHPMailer(true);
-    if (!empty($cfg['smtp']['enabled'])) {
-      $mailer->isSMTP();
-      $mailer->Host = $cfg['smtp']['host'];
-      $mailer->SMTPAuth = true;
-      $mailer->Username = $cfg['smtp']['user'];
-      $mailer->Password = $cfg['smtp']['pass'];
-      $mailer->SMTPSecure = $cfg['smtp']['secure'];
-      $mailer->Port = (int)$cfg['smtp']['port'];
-    }
-
+    $mailer->isSMTP();
+    $mailer->Host = $cfg['smtp']['host'];
+    $mailer->SMTPAuth = true;
+    $mailer->Username = $cfg['smtp']['user'];
+    $mailer->Password = $cfg['smtp']['pass'];
+    $mailer->SMTPSecure = $cfg['smtp']['secure'];
+    $mailer->Port = (int)$cfg['smtp']['port'];
     $mailer->CharSet = 'UTF-8';
-    $mailer->setFrom($cfg['from'], 'Website');
+    $mailer->setFrom($cfg['from'], 'PrintStudio');
     $mailer->addAddress($cfg['to']);
     $mailer->addReplyTo($email, $name);
     $mailer->Subject = $subject;
     $mailer->Body = $body;
-
+    $mailer->isHTML(false);
+    
+    // Add attachment if file present
+    if ($file) {
+      $mailer->addAttachment($file['tmp_name'], $file['name']);
+    }
+    
     $mailer->send();
     echo json_encode(['ok' => true]);
     exit;
-  } catch (Throwable $e) {
-    // fall through to mail() as a backup
+  } catch (Exception $e) {
+    // Fall through to mail() backup
   }
 }
 
-// Fallback: PHP mail()
-$headers = "From: {$cfg['from']}\r\nReply-To: {$email}\r\nX-Mailer: PHP/" . phpversion();
+// Fallback: PHP mail() - with proper UTF-8 headers
+$headers = "MIME-Version: 1.0\r\n";
+$headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
+$headers .= "Content-Transfer-Encoding: 8bit\r\n";
+$headers .= "From: {$cfg['from']}\r\n";
+$headers .= "Reply-To: {$email}\r\n";
+$headers .= "X-Mailer: PHP/" . phpversion();
+
+// For attachments with mail(), we need multipart MIME
+if ($file) {
+  $boundary = "boundary_" . md5(time());
+  $headers .= "\r\nContent-Type: multipart/mixed; boundary=\"{$boundary}\"";
+  
+  $body = "--{$boundary}\r\n";
+  $body .= "Content-Type: text/plain; charset=UTF-8\r\n";
+  $body .= "Content-Transfer-Encoding: 8bit\r\n\r\n";
+  $body .= "Name: {$name}\nEmail: {$email}\n\nMessage:\n{$message}\n";
+  $body .= "\r\n--{$boundary}\r\n";
+  $body .= "Content-Type: application/octet-stream\r\n";
+  $body .= "Content-Transfer-Encoding: base64\r\n";
+  $body .= "Content-Disposition: attachment; filename=\"" . basename($file['name']) . "\"\r\n\r\n";
+  $body .= chunk_split(base64_encode(file_get_contents($file['tmp_name'])));
+  $body .= "\r\n--{$boundary}--";
+}
+
 $sent = @mail($cfg['to'], $subject, $body, $headers);
 
 if ($sent) {
@@ -198,4 +193,5 @@ if ($sent) {
 } else {
   http_response_code(500);
   echo json_encode(['ok' => false, 'error' => 'Failed to send email']);
+}
 }
