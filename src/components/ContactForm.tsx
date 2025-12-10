@@ -42,21 +42,27 @@ const ContactForm: React.FC = () => {
         formData.append('file', data.file[0])
       }
       formData.append('recaptchaToken', recaptchaToken)
+
       const res = await fetch('/contact.php', {
         method: 'POST',
         body: formData,
       })
-      const json = await res
-        .json()
-        .catch(() => ({ ok: false, error: t('errorMessage', 'Radās kļūda.') }))
+
+      const json = await res.json().catch(() => ({ ok: false, error: 'Network error' }))
+
       if (!res.ok || !json.ok) {
-        throw new Error(json.error || t('errorMessage', 'Radās kļūda.'))
+        const errorMsg = json.error || json.message || 'Nezināma kļūda'
+        throw new Error(errorMsg)
       }
+
       setServerOk(true)
       reset()
+      setRecaptchaToken('')
+      // Auto-hide success message after 5 seconds
+      setTimeout(() => setServerOk(false), 5000)
     } catch (err: any) {
-      console.error(err)
-      setServerError(err?.message || t('errorMessage', 'Radās kļūda.'))
+      console.error('Form error:', err)
+      setServerError(err?.message || t('errorMessage', 'Radās kļūda sūtot ziņu'))
     }
   }
 
