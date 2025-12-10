@@ -234,7 +234,7 @@ const Footer: React.FC = () => {
                   aria-label={t('footer.newsletter.agreeLabel') || 'I want to receive newsletter'}
                 />
                 <label htmlFor='newsletter-agree' className='text-xs text-gray-300 leading-snug cursor-pointer pt-0.5'>
-                  {t('footer.newsletter.agreeLabel', 'Apliecinčiu, ka vēlos saņemt informāciju e-pastā')}
+                  {t('footer.newsletter.agreeLabel', 'Apliecinu, ka vēlos saņemt informāciju e-pastā')}
                 </label>
               </div>
               <Button type='submit' variant='primary' size='sm' className='w-full rounded-lg'>
