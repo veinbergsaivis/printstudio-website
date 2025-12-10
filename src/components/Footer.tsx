@@ -60,10 +60,37 @@ const Footer: React.FC = () => {
       alert(t('footer.newsletter.agreeError') || 'Please confirm you want to receive newsletter')
       return
     }
-    console.log('Newsletter subscription:', email)
-    setEmail('')
-    setAgreeNewsletter(false)
-    alert(t('footer.newsletter.successMessage') || 'Thanks for subscribing!')
+    if (!email) {
+      alert(t('footer.newsletter.emailError') || 'Please enter your email')
+      return
+    }
+
+    // Send to server
+    const submitBtn = (e.target as HTMLFormElement).querySelector('button[type="submit"]') as HTMLButtonElement
+    if (submitBtn) submitBtn.disabled = true
+
+    fetch('/newsletter.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, agreed: agreeNewsletter }),
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.ok) {
+          alert(t('footer.newsletter.successMessage') || 'Thanks for subscribing!')
+          setEmail('')
+          setAgreeNewsletter(false)
+        } else {
+          alert(data.error || 'Error subscribing')
+        }
+      })
+      .catch(err => {
+        console.error('Newsletter error:', err)
+        alert(t('footer.newsletter.errorMessage') || 'Error subscribing')
+      })
+      .finally(() => {
+        if (submitBtn) submitBtn.disabled = false
+      })
   }
 
   const contactPhone = t('contact.info.phone.value', '(+371) 20 533 256')
