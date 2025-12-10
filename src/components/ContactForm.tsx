@@ -33,7 +33,7 @@ const ContactForm: React.FC = () => {
   const [selectedFileName, setSelectedFileName] = useState<string>('')
 
   // Client-side file limits (keep in sync with server)
-  const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10 MB
+  const MAX_FILE_SIZE = 25 * 1024 * 1024 // 25 MB
   const allowedTypes = [
     'application/pdf',
     'image/jpeg',
@@ -208,7 +208,7 @@ const ContactForm: React.FC = () => {
                 if (f.size > MAX_FILE_SIZE) {
                   setError('file', {
                     type: 'manual',
-                    message: `Fails ir pārāk liels (max ${Math.round(MAX_FILE_SIZE / 1024 / 1024)}MB)`,
+                    message: `Fails ir pārāk liels (max ${Math.round(MAX_FILE_SIZE / 1024 / 1024)} MB)`,
                   })
                 } else if (allowedTypes.length && !allowedTypes.includes(f.type)) {
                   setError('file', { type: 'manual', message: 'Faila tips nav atļauts' })

@@ -59,10 +59,10 @@ $file = null;
 $fileError = null;
 if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
   $file = $_FILES['file'];
-  // Faila validācija (max 10MB, atļautie tipi)
+  // Faila validācija (max 25 MB, atļautie tipi)
   $allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-  if ($file['size'] > 10 * 1024 * 1024) {
-    $fileError = 'Fails ir pārāk liels (max 10MB)';
+  if ($file['size'] > 25 * 1024 * 1024) {
+    $fileError = 'Fails ir pārāk liels (max 25 MB)';
   } elseif (!in_array($file['type'], $allowedTypes)) {
     $fileError = 'Faila tips nav atļauts';
   }
