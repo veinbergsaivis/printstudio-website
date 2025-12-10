@@ -117,8 +117,21 @@ if (file_exists($configPath)) {
   }
 }
 
-$subject = 'New contact form message from ' . $name;
+// Prepare subject and body. Encode subject for non-ASCII names in headers.
+$rawSubject = 'New contact form message from ' . $name;
 $body = "Name: {$name}\nEmail: {$email}\n\nMessage:\n{$message}\n";
+
+// Ensure mbstring available and set internal encoding
+if (function_exists('mb_internal_encoding')) {
+  mb_internal_encoding('UTF-8');
+}
+
+if (function_exists('mb_encode_mimeheader')) {
+  $subject = mb_encode_mimeheader($rawSubject, 'UTF-8', 'B');
+} else {
+  // Fallback to RFC2047 Base64 encoding
+  $subject = '=?UTF-8?B?' . base64_encode($rawSubject) . '?=';
+}
 
 // Try PHPMailer first (best for attachments & encoding)
 $autoload1 = $cfg['repo_root'] . '/vendor/autoload.php';
@@ -131,7 +144,7 @@ if ((file_exists($autoload1) || file_exists($autoload2)) && $cfg['smtp']['enable
     require_once $autoload2;
   }
   
-  try {
+    try {
     $mailer = new PHPMailer\PHPMailer\PHPMailer(true);
     $mailer->isSMTP();
     $mailer->Host = $cfg['smtp']['host'];
@@ -143,16 +156,17 @@ if ((file_exists($autoload1) || file_exists($autoload2)) && $cfg['smtp']['enable
     $mailer->CharSet = 'UTF-8';
     $mailer->setFrom($cfg['from'], 'PrintStudio');
     $mailer->addAddress($cfg['to']);
+    // Use raw subject for PHPMailer (it will encode correctly)
     $mailer->addReplyTo($email, $name);
-    $mailer->Subject = $subject;
+    $mailer->Subject = $rawSubject;
     $mailer->Body = $body;
     $mailer->isHTML(false);
-    
+
     // Add attachment if file present
     if ($file) {
       $mailer->addAttachment($file['tmp_name'], $file['name']);
     }
-    
+
     $mailer->send();
     echo json_encode(['ok' => true]);
     exit;
@@ -165,7 +179,17 @@ if ((file_exists($autoload1) || file_exists($autoload2)) && $cfg['smtp']['enable
 $headers = "MIME-Version: 1.0\r\n";
 $headers .= "Content-Transfer-Encoding: 8bit\r\n";
 $headers .= "From: {$cfg['from']}\r\n";
-$headers .= "Reply-To: {$email}\r\n";
+
+// If sender provided a name, encode it for Reply-To header
+if (!empty($name) && function_exists('mb_encode_mimeheader')) {
+  $encodedName = mb_encode_mimeheader($name, 'UTF-8', 'B');
+  $headers .= "Reply-To: {$encodedName} <{$email}>\r\n";
+} elseif (!empty($name)) {
+  $headers .= "Reply-To: \"{$name}\" <{$email}>\r\n";
+} else {
+  $headers .= "Reply-To: {$email}\r\n";
+}
+
 $headers .= "X-Mailer: PHP/" . phpversion();
 
 $mailBody = "Name: {$name}\nEmail: {$email}\n\nMessage:\n{$message}\n";
@@ -189,6 +213,7 @@ if ($file) {
   $headers .= "\r\nContent-Type: text/plain; charset=UTF-8";
 }
 
+// Use encoded subject for mail() headers
 $sent = @mail($cfg['to'], $subject, $mailBody, $headers);
 
 if ($sent) {
