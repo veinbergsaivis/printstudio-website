@@ -228,12 +228,12 @@ const ContactForm: React.FC = () => {
           <button
             type='button'
             onClick={() => document.getElementById('file')?.click()}
-            className='inline-flex items-center gap-2 px-4 py-2 rounded bg-gray-200 text-sm'
+            className='inline-flex items-center gap-2 px-4 py-2 rounded bg-primary text-white text-sm font-medium hover:brightness-110 transition-all'
           >
             {t('contact.form.chooseFile', 'Choose File')}
           </button>
 
-          <div className='text-sm text-muted'>
+          <div className='text-sm text-text-base'>
             {selectedFileName ||
               `${Math.round(MAX_FILE_SIZE / 1024 / 1024)} MB, PDF/JPG/PNG/DOC/DOCX`}
           </div>
