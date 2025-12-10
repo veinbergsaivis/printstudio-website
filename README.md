@@ -15,10 +15,11 @@ Moderna, daudzvalodu drukātavas mājas lapa, veidota ar React, TypeScript un Ta
 - 🚀 **Optimizēta veiktspēja** - lazy loading, code splitting
 - 📊 **Google Analytics & GTM** integrācija
 - 📝 **SEO optimizācija** - meta tags, sitemap, robots.txt
-- 🎯 **Kontakta forma** ar validāciju
+- 🎯 **Kontakta forma** ar validāciju un uzlabotu pogu dizainu
 - 🍪 **Cookie consent** ar GDPR compliance
 - 🖼️ **WebP attēli** optimizētai ielādei
 - ♿ **Pieejamība** - ARIA labels, keyboard navigation
+- ✨ **Uzlabota kontaktu poga** - jaunš dizains ar animācijām un labāku UX
 
 ## 🛠️ Tehnoloģijas
 
