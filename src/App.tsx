@@ -7,6 +7,8 @@ import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import CookieConsent from './components/CookieConsent'
 import BackToTop from './components/BackToTop' // ✅ JAUNS: bultiņa uz augšu
+import ErrorBoundary from './components/ErrorBoundary'
+import { HelmetProvider } from 'react-helmet-async'
 
 // Context Provider
 import { CookieConsentProvider } from './contexts/CookieConsentContext'
@@ -60,39 +62,43 @@ const HomePage: React.FC = () => {
 function App() {
   return (
     <Router>
-      <CookieConsentProvider>
-        <div className="flex min-h-screen flex-col bg-background">
-          <Navbar />
+      <HelmetProvider>
+        <CookieConsentProvider>
+          <div className='flex min-h-screen flex-col bg-background'>
+            <Navbar />
 
-          {/* ✅ pt-nav uz wrappera ap Routes, lai visām lapām ir pareizā atstarpe */}
-          <div className="flex-grow pt-nav">
-            <Routes>
-              {/* Sākumlapa ar sekcijām */}
-              <Route path="/" element={<HomePage />} />
+            {/* ✅ pt-nav uz wrappera ap Routes, lai visām lapām ir pareizā atstarpe */}
+            <div className='flex-grow pt-nav'>
+              <ErrorBoundary>
+                <Routes>
+                  {/* Sākumlapa ar sekcijām */}
+                  <Route path='/' element={<HomePage />} />
 
-              {/* ✅ Cenrādis */}
-              <Route path="/pricing" element={<PricingPage />} />
+                  {/* ✅ Cenrādis */}
+                  <Route path='/pricing' element={<PricingPage />} />
 
-              {/* Citas lapas */}
-              <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-              <Route path="/terms-of-service" element={<TermsOfServicePage />} />
-              <Route path="/file-guidelines" element={<FileGuidelinesPage />} />
-              {/* Blogs */}
-              <Route path="/blog" element={<BlogPage />} />
-              <Route path="/blog/:postId" element={<BlogPostPage />} />
+                  {/* Citas lapas */}
+                  <Route path='/privacy-policy' element={<PrivacyPolicyPage />} />
+                  <Route path='/terms-of-service' element={<TermsOfServicePage />} />
+                  <Route path='/file-guidelines' element={<FileGuidelinesPage />} />
+                  {/* Blogs */}
+                  <Route path='/blog' element={<BlogPage />} />
+                  <Route path='/blog/:postId' element={<BlogPostPage />} />
 
-              {/* 404 */}
-              <Route path="*" element={<NotFoundPage />} />
-            </Routes>
+                  {/* 404 */}
+                  <Route path='*' element={<NotFoundPage />} />
+                </Routes>
+              </ErrorBoundary>
+            </div>
+
+            {/* ✅ Bultiņa uz augšu (globāli visā lapā) */}
+            <BackToTop />
+
+            <Footer />
+            <CookieConsent />
           </div>
-
-          {/* ✅ Bultiņa uz augšu (globāli visā lapā) */}
-          <BackToTop />
-
-          <Footer />
-          <CookieConsent />
-        </div>
-      </CookieConsentProvider>
+        </CookieConsentProvider>
+      </HelmetProvider>
     </Router>
   )
 }

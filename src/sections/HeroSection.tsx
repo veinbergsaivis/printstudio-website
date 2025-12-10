@@ -228,7 +228,6 @@ export default function HeroSection() {
                   }}
                   loading={index === 0 ? 'eager' : 'lazy'}
                   decoding='async'
-                  fetchPriority={index === 0 ? 'high' : 'auto'}
                   draggable={false}
                   style={{ willChange: 'opacity, transform, filter' }}
                 />

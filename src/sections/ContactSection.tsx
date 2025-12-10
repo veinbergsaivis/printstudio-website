@@ -150,17 +150,17 @@ const ContactSection: React.FC = () => {
               </h4>
               <div className='flex gap-3'>
                 <SocialLink
-                  href='#'
+                  href='https://www.instagram.com/printstudio.lv/'
                   label={t('contact.social.instagram', 'Instagram')}
                   icon={<Instagram />}
                 />
                 <SocialLink
-                  href='#'
+                  href='https://www.facebook.com/PrintStudioLatvia/'
                   label={t('contact.social.facebook', 'Facebook')}
                   icon={<Facebook />}
                 />
                 <SocialLink
-                  href='#'
+                  href='https://www.linkedin.com/company/printstudiolv/'
                   label={t('contact.social.linkedin', 'LinkedIn')}
                   icon={<Linkedin />}
                 />

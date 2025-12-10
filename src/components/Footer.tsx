@@ -110,19 +110,19 @@ const Footer: React.FC = () => {
               aria-label={t('footer.socialLinks', 'Social Links')}
             >
               <SocialLink
-                href='https://instagram.com/printstudio'
+                href='https://www.instagram.com/printstudio.lv/'
                 icon={<Instagram size={18} />}
                 label='Instagram'
                 role='listitem'
               />
               <SocialLink
-                href='https://facebook.com/printstudio'
+                href='https://www.facebook.com/PrintStudioLatvia/'
                 icon={<Facebook size={18} />}
                 label='Facebook'
                 role='listitem'
               />
               <SocialLink
-                href='https://linkedin.com/company/printstudio'
+                href='https://www.linkedin.com/company/printstudiolv/'
                 icon={<Linkedin size={18} />}
                 label='LinkedIn'
                 role='listitem'
